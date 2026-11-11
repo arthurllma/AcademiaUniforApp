@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AcademiaUniforTelas1" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorAccent">@color/primary_blue</item>
+        <item name="materialButtonStyle">@style/Widget.Material3.Button</item>
+    </style>
+
+    <style name="Theme.AcademiaUniforTelas1" parent="Base.Theme.AcademiaUniforTelas1" />
+</resources>

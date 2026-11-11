@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_academia_logo"
+        android:contentDescription="@string/app_name"
+        android:layout_marginBottom="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Academia Unifor"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#0F172A"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Iniciar App (Fluxo Normal) -->
+    <Button
+        android:id="@+id/btnFluxoNormal"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Iniciar Aplicativo"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/bg_rounded_button"
+        android:layout_marginBottom="16dp" />
+
+</LinearLayout>

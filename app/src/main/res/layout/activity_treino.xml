@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical">
+    <include layout="@layout/include_top_bar" />
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingVertical="16dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Minha Ficha de Treino" android:textColor="#0F172A" android:textSize="22sp" android:textStyle="bold" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Foco em membros superiores e força geral" android:textColor="#64748B" android:textSize="14sp" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="16dp" android:background="@drawable/bg_card_blue" android:gravity="center_vertical" android:orientation="horizontal" android:padding="4dp">
+                <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@drawable/bg_pill_blue" android:gravity="center" android:text="Treino A" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+                <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="Treino B" android:textColor="#2558F5" android:textSize="14sp" android:textStyle="bold" />
+                <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="Treino C" android:textColor="#2558F5" android:textSize="14sp" android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:background="@drawable/bg_card_blue" android:gravity="center_vertical" android:orientation="horizontal" android:padding="12dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ⓘ  Treino A — Peito e Tríceps" android:textColor="#0F172A" android:textSize="14sp" android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Botão Iniciar Treino -->
+            <Button
+                android:id="@+id/btnIniciarTreino"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_rounded_button"
+                android:text="Iniciar Treino"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="false" />
+
+            <!-- Lista Simplificada de Exercicio -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Supino Reto" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="4×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="60kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Supino inclinado -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Supino Inclinado" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="4×10" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="50kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Crucifixo -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Crucifixo" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="3×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="16kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+            </LinearLayout>
+
+            <Space android:layout_width="match_parent" android:layout_height="24dp" />
+        </LinearLayout>
+    </ScrollView>
+    <include layout="@layout/include_bottom_nav" />
+</LinearLayout>

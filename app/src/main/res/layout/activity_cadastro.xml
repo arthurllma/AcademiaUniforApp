@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_top_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp">
+
+            <!-- Logo -->
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_academia_logo" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="Academia Unifor"
+                android:textColor="#0F172A"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Crie sua conta"
+                android:textColor="#0F172A"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Preencha seus dados para iniciar o cadastro"
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+
+            <!-- Nome -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Nome Completo" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etNomeCompleto" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="Digite seu nome completo" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorNomeCompleto" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira seu nome completo" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <!-- CPF -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="CPF" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etCpf" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="000.000.000-00" android:inputType="number" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorCpf" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira um CPF válido" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <!-- Data & Genero -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal" android:baselineAligned="false">
+                <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Data de Nascimento" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                    <EditText android:id="@+id/etDataNascimento" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="DD/MM/AAAA" android:inputType="date" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+                    <TextView android:id="@+id/tvErrorDataNascimento" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira uma data válida" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+                </LinearLayout>
+                <Space android:layout_width="12dp" android:layout_height="wrap_content" />
+                <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Gênero" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                    <Spinner android:id="@+id/spGenero" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:paddingHorizontal="12dp" />
+                    <TextView android:id="@+id/tvErrorGenero" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Selecione uma opção" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Celular -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="Celular" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etCelular" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="(00) 00000-0000" android:inputType="phone" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorCelular" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira um número válido" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <!-- Email -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="E-mail" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="seuemail@unifor.br" android:inputType="textEmailAddress" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira um e-mail válido" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <!-- Senha -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="Senha" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etSenha" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="Crie uma senha forte" android:inputType="textPassword" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorSenha" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Mínimo 8 caracteres" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+            <EditText android:id="@+id/etConfirmarSenha" android:layout_width="match_parent" android:layout_height="50dp" android:layout_marginTop="12dp" android:background="@drawable/bg_rounded_field" android:hint="Confirme a senha" android:inputType="textPassword" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorConfirmarSenha" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="As senhas não coincidem." android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <!-- CEP & Endereco (simplified) -->
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="CEP" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etCep" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="60000-000" android:inputType="number" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorCep" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira um CEP válido" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="Endereço" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+            <EditText android:id="@+id/etEndereco" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="Insira seu endereço" android:inputType="textPostalAddress" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+            <TextView android:id="@+id/tvErrorEndereco" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insira um endereço válido" android:textColor="#E53935" android:textSize="12sp" android:visibility="gone" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal" android:baselineAligned="false">
+                <LinearLayout android:layout_width="0dp" android:layout_weight="0.45" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Número" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                    <EditText android:id="@+id/etNumero" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="Ex: 1" android:inputType="number" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+                </LinearLayout>
+                <Space android:layout_width="12dp" android:layout_height="wrap_content" />
+                <LinearLayout android:layout_width="0dp" android:layout_weight="0.55" android:layout_height="wrap_content" android:orientation="vertical">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Complemento" android:textColor="#1E293B" android:textSize="14sp" android:textStyle="bold" />
+                    <EditText android:id="@+id/etComplemento" android:layout_width="match_parent" android:layout_height="50dp" android:background="@drawable/bg_rounded_field" android:hint="Ex.: Próximo ao mercado" android:inputType="text" android:paddingHorizontal="16dp" android:textColor="#0F172A" android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal" android:gravity="center_vertical">
+                <CheckBox android:id="@+id/cbSemNumero" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sem número" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:text="Opcional" android:textColor="#64748B" android:textSize="13sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnCriarConta"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_rounded_button"
+                android:text="Criar Conta"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="false" />
+
+            <Space android:layout_width="match_parent" android:layout_height="32dp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_top_bar" />
+
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Exemplos de Execução" android:textColor="#0F172A" android:textStyle="bold" android:textSize="22sp" android:layout_marginBottom="24dp" />
+            <View android:layout_width="match_parent" android:layout_height="200dp" android:background="#000" android:layout_marginBottom="16dp"/>
+            <View android:layout_width="match_parent" android:layout_height="200dp" android:background="#EAF2FA" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="#F1F5F9"
+    android:elevation="8dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <!-- Tab 1: Home -->
+    <LinearLayout
+        android:id="@+id/navHome"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"/>
+
+    <!-- Tab 2: Treinos -->
+    <LinearLayout
+        android:id="@+id/navTreinos"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"/>
+
+    <!-- Tab 3: Mapa -->
+    <LinearLayout
+        android:id="@+id/navMapa"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"/>
+
+    <!-- Tab 4: Perfil -->
+    <LinearLayout
+        android:id="@+id/navPerfil"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"/>
+
+</LinearLayout>

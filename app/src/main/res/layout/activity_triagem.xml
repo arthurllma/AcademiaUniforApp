@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="FLUXO DE TRIAGEM"
+                    android:textColor="#2558F5"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Etapa 1 de 5"
+                    android:textColor="#64748B"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:max="5"
+                android:progress="1"
+                android:progressDrawable="@drawable/bg_top_bar_back" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Objetivo e Rotina"
+                android:textColor="#0F172A"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- Nível de Experiência -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Qual seu nível de experiência?"
+                android:textColor="#0F172A"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/chipExp1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_chip_selected"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="10dp"
+                    android:text="Nunca treinei (iniciante)"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chipExp2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="10dp"
+                    android:text="Já treinei, mas estou parado"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/chipExp3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="10dp"
+                    android:text="Treino regularmente"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Objetivo Principal -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Objetivo Principal"
+                android:textColor="#0F172A"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:columnCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView
+                    android:id="@+id/chipObj1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/bg_chip_selected"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Hipertrofia"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/chipObj2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Emagrecimento"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/chipObj3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Condicionamento"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/chipObj4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Flexibilidade"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/chipObj5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Saúde Geral"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/chipObj6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:background="@drawable/bg_chip_unselected"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Outro"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
+            </GridLayout>
+
+            <!-- EditText para "Outro" -->
+            <EditText
+                android:id="@+id/etOutroObjetivo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_rounded_field"
+                android:hint="Digite seu objetivo"
+                android:paddingHorizontal="16dp"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <!-- Frequência semanal ideal -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Frequência semanal ideal"
+                android:textColor="#0F172A"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/freq1" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="1x" android:textColor="#0F172A" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq2" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="2x" android:textColor="#0F172A" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq3" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_selected" android:gravity="center" android:text="3x" android:textColor="#FFFFFF" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq4" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="4x" android:textColor="#0F172A" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq5" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="5x" android:textColor="#0F172A" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq6" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="6x" android:textColor="#0F172A" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq7" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="7x" android:textColor="#0F172A" android:textStyle="bold"/>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Botão Prosseguir -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F8FAFC"
+        android:padding="24dp">
+        <Button
+            android:id="@+id/btnProsseguirTriagem1"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_rounded_button"
+            android:text="Prosseguir"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

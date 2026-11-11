@@ -1,0 +1,49 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="100dp"
+    android:viewportWidth="300"
+    android:viewportHeight="120">
+    <path
+        android:fillColor="#EBF3FB"
+        android:pathData="M0,0h300v120h-300z" />
+    <path
+        android:strokeColor="#CBD5E1"
+        android:strokeWidth="2"
+        android:pathData="M10,10h280v100h-280z" />
+    <!-- Recepção -->
+    <path
+        android:fillColor="#DDD6FE"
+        android:strokeColor="#9333EA"
+        android:strokeWidth="1"
+        android:pathData="M20,20h50v40h-50z" />
+    <!-- Peito & Costas -->
+    <path
+        android:fillColor="#FED7AA"
+        android:strokeColor="#EA580C"
+        android:strokeWidth="1"
+        android:pathData="M80,20h60v40h-60z" />
+    <!-- Pernas -->
+    <path
+        android:fillColor="#BBF7D0"
+        android:strokeColor="#16A34A"
+        android:strokeWidth="1"
+        android:pathData="M150,20h60v40h-60z" />
+    <!-- Halteres -->
+    <path
+        android:fillColor="#FECDD3"
+        android:strokeColor="#E11D48"
+        android:strokeWidth="1"
+        android:pathData="M220,20h60v40h-60z" />
+    <!-- Esteiras -->
+    <path
+        android:fillColor="#BAE6FD"
+        android:strokeColor="#0284C7"
+        android:strokeWidth="1"
+        android:pathData="M20,70h120v30h-120z" />
+    <!-- Abdominais -->
+    <path
+        android:fillColor="#FEF08A"
+        android:strokeColor="#CA8A04"
+        android:strokeWidth="1"
+        android:pathData="M150,70h130v30h-130z" />
+</vector>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/navPainel" android:title="Painel" android:icon="@drawable/ic_home" />
+    <item android:id="@+id/navMontarFicha" android:title="Montar Ficha" android:icon="@drawable/ic_fitness" />
+    <item android:id="@+id/navAlunos" android:title="Alunos" android:icon="@drawable/ic_profile" />
+    <item android:id="@+id/navPerfilInstrutor" android:title="Perfil" android:icon="@drawable/ic_profile" />
+</menu>

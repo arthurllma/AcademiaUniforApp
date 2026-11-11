@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/ic_academia_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_academia_logo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AcademiaUniforTelas1">
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".CadastroActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".EsqueceuSenhaActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name=".TriagemActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".TriagemEtapa2Activity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".TriagemEtapa3Activity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".TriagemEtapa4Activity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".TriagemEtapa5Activity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".IniciarTreinoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ExemplosAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MinimapaAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MapaActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".PerfilAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".PerfilAulasActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".PerfilBiometriaActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".PerfilConfiguracaoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".BibliotecaTreinosInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MontarTreinoInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".AlunosInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".MontarFichaAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".PerfilInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".AulasColetivasInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ParqActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".HomeAlunoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".HomeInstrutorActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ExercicioAlunoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".TreinoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".EditarExercicioActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

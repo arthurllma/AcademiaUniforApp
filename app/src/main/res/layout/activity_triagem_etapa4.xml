@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="FLUXO DE TRIAGEM"
+                    android:textColor="#2558F5"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Etapa 4 de 5"
+                    android:textColor="#64748B"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="8dp"
+                android:max="5"
+                android:progress="4"
+                android:progressDrawable="@drawable/bg_top_bar_back" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Histórico de Lesões"
+                android:textColor="#0F172A"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Selecione as regiões onde possui histórico de dores ou lesões antigas."
+                android:textColor="#64748B"
+                android:textSize="14sp" />
+
+            <!-- Histórico de lesões/restrições -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Histórico de lesões/restrições:"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:columnCount="3"
+                android:useDefaultMargins="true">
+
+                <TextView android:id="@+id/chipLesao1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Joelho" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipLesao2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_selected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Coluna" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+                <TextView android:id="@+id/chipLesao3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Ombro" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipLesao4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Tornozelo" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipLesao5" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Punho" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipLesao6" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Quadril" android:textColor="#0F172A" android:textSize="13sp" />
+            </GridLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+                <TextView android:id="@+id/chipLesaoNenhuma" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="8dp" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Nenhuma Lesão" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipLesaoOutras" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_selected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Outras" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/etOutrasLesoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_rounded_field"
+                android:hint="Digite outras dores ou lesões antigas, caso exista."
+                android:minLines="2"
+                android:padding="16dp"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+            <!-- Outros esportes -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Pratica outro esporte paralelamente?"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:columnCount="2"
+                android:useDefaultMargins="true">
+
+                <TextView android:id="@+id/chipEsporte1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Corrida/Caminhada" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipEsporte2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_selected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Futebol/Lutas" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+                <TextView android:id="@+id/chipEsporte3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Natação/Ciclismo" android:textColor="#0F172A" android:textSize="13sp" />
+                <TextView android:id="@+id/chipEsporte4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_chip_unselected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Nenhum" android:textColor="#0F172A" android:textSize="13sp" />
+            </GridLayout>
+
+            <TextView android:id="@+id/chipEsporteOutros" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:background="@drawable/bg_chip_selected" android:paddingHorizontal="16dp" android:paddingVertical="10dp" android:text="Outros" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etOutrosEsportes"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_rounded_field"
+                android:hint="Digite"
+                android:paddingHorizontal="16dp"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:visibility="visible" />
+
+            <!-- Observações -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Observações adicionais (opcional):"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etObservacoes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_rounded_field"
+                android:gravity="top|start"
+                android:hint="Ex: Descreva detalhes de cirurgias ou restrições médicas..."
+                android:lines="4"
+                android:minLines="3"
+                android:padding="16dp"
+                android:textColor="#0F172A"
+                android:textSize="14sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="24dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Botão Prosseguir -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F8FAFC"
+        android:padding="24dp">
+        <Button
+            android:id="@+id/btnProsseguirTriagem4"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/bg_rounded_button"
+            android:text="Prosseguir"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

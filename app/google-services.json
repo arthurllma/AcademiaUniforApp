@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "191735206502",
+    "project_id": "academiaunifortelas1-58b7f",
+    "storage_bucket": "academiaunifortelas1-58b7f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191735206502:android:5bbf083aa27f77d1a2d3a7",
+        "android_client_info": {
+          "package_name": "br.com.academiaunifortelas1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl5Ey6kWFgQ3NlHTJ-hUC2iCZI7E24eyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

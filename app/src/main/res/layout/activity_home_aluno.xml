@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_white">
+
+    <ViewFlipper
+        android:id="@+id/viewFlipperAluno"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav">
+
+        <!-- 0: HOME -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="24dp"
+                android:paddingVertical="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:contentDescription="Logo"
+                        android:src="@drawable/ic_academia_logo" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Academia Unifor"
+                        android:textColor="@color/dark_navy"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bem-vindo de volta,"
+                            android:textColor="@color/text_gray"
+                            android:textSize="14sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Olá, João!"
+                            android:textColor="@color/dark_navy"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="Perfil"
+                        android:src="@drawable/ic_avatar_bordered" />
+                </LinearLayout>
+
+                <!-- Card 1: Lotação Atual -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_card_blue"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="67%"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lotação Atual"
+                            android:textColor="@color/dark_navy"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="42/63 pessoas treinando agora"
+                            android:textColor="@color/text_gray"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Card 2: Treino do Dia -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_card_blue"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Treino do Dia"
+                            android:textColor="@color/primary_blue"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ficha A"
+                            android:textColor="@color/primary_blue"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Treino A — Peito e Tríceps"
+                        android:textColor="@color/dark_navy"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Supino Reto, Crucifixo, Tríceps Pulley"
+                        android:textColor="@color/text_gray"
+                        android:textSize="14sp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="#CBD5E1" />
+                    <TextView
+                        android:id="@+id/btnVerFichaTreino1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="Ver Ficha Completa →"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Card 3: Mapa da Academia -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_card_blue"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mapa da Academia"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_map_diagram" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="12dp"
+                        android:text="Ver Minimapa"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Card 4: Próximos Treinos -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_card_blue"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Próximos Treinos"
+                            android:textColor="@color/primary_blue"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ficha A"
+                            android:textColor="@color/primary_blue"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Treino B — Perna e Costas"
+                        android:textColor="@color/dark_navy"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Exercício 1, Exercício 2, Exercício 3, Exercício 4"
+                        android:textColor="@color/text_gray"
+                        android:textSize="14sp" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="#CBD5E1" />
+                    <TextView
+                        android:id="@+id/btnVerFichaTreino2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ver Ficha Completa →"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- 1: TREINOS -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="24dp" android:paddingVertical="16dp">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/minha_ficha_treino" android:textColor="#0F172A" android:textSize="22sp" android:textStyle="bold" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/foco_treino" android:textColor="#64748B" android:textSize="14sp" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="16dp" android:background="@drawable/bg_card_blue" android:gravity="center_vertical" android:orientation="horizontal" android:padding="4dp">
+                    <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:background="@drawable/bg_pill_blue" android:gravity="center" android:text="Treino A" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="Treino B" android:textColor="#2558F5" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:text="Treino C" android:textColor="#2558F5" android:textSize="14sp" android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:background="@drawable/bg_card_blue" android:gravity="center_vertical" android:orientation="horizontal" android:padding="12dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ⓘ  Treino A — Peito e Tríceps" android:textColor="#0F172A" android:textSize="14sp" android:textStyle="bold" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnIniciarTreino"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_rounded_button"
+                    android:text="Iniciar Treino"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="false" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Supino Reto" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="4×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="60kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Supino Inclinado" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="4×10" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="50kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Crucifixo" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="3×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="16kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+
+                <Space android:layout_width="match_parent" android:layout_height="32dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- 2: MAPA -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seção: Mapa\n(Em desenvolvimento...)"
+                android:textAlignment="center"
+                android:textColor="@color/text_gray"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- 3: PERFIL -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seção: Perfil\n(Em desenvolvimento...)"
+                android:textAlignment="center"
+                android:textColor="@color/text_gray"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+    </ViewFlipper>
+
+    <!-- Chat FAB -->
+    <ImageView
+        android:id="@+id/fabChat"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_above="@id/bottomNav"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_chat_fab"
+        android:elevation="6dp"
+        android:stateListAnimator="@null"
+        android:contentDescription="Chat" />
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFFFFF"
+        app:itemIconTint="@color/nav_item_colors"
+        app:itemTextColor="@color/nav_item_colors"
+        app:menu="@menu/menu_bottom_nav"
+        app:labelVisibilityMode="labeled"
+        app:elevation="12dp" />
+
+</RelativeLayout>
