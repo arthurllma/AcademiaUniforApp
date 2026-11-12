@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0"
+agp = "9.4.1"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -11,7 +11,7 @@ constraintlayout = "2.2.0"
 composeBom = "2024.12.01"
 activityCompose = "1.9.3"
 navigationCompose = "2.8.5"
-kotlin = "2.0.21"
+kotlin = "2.4.21"
 googleGmsGoogleServices = "4.5.0"
 firebaseFirestore = "27.1.0"
 

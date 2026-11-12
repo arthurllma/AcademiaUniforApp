@@ -9,15 +9,27 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import br.com.academiaunifortelas1.model.Usuario
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class CadastroActivity : AppCompatActivity() {
+
+    // 1. Declarar instâncias do Firebase
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_cadastro)
+
+        // 2. Inicializar Firebase
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
         findViewById<View>(R.id.btnVoltarMenu)?.setOnClickListener { finish() }
 
@@ -26,6 +38,8 @@ class CadastroActivity : AppCompatActivity() {
         spGenero?.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genderOptions)
 
         val etNumero = findViewById<EditText>(R.id.etNumero)
+        val etComplemento = findViewById<EditText>(R.id.etComplemento)
+
         findViewById<CheckBox>(R.id.cbSemNumero)?.setOnCheckedChangeListener { _, isChecked ->
             etNumero?.isEnabled = !isChecked
             if (isChecked) etNumero?.text?.clear()
@@ -47,15 +61,21 @@ class CadastroActivity : AppCompatActivity() {
                 return text
             }
 
-            validateField(R.id.etNomeCompleto, R.id.tvErrorNomeCompleto)
-            validateField(R.id.etCpf, R.id.tvErrorCpf, 11)
-            validateField(R.id.etDataNascimento, R.id.tvErrorDataNascimento, 8)
-            validateField(R.id.etCelular, R.id.tvErrorCelular, 10)
-            validateField(R.id.etEmail, R.id.tvErrorEmail, 5)
+            // Captura todos os textos enquanto valida
+            val nome = validateField(R.id.etNomeCompleto, R.id.tvErrorNomeCompleto)
+            val cpf = validateField(R.id.etCpf, R.id.tvErrorCpf, 11)
+            val dataNasc = validateField(R.id.etDataNascimento, R.id.tvErrorDataNascimento, 8)
+            val celular = validateField(R.id.etCelular, R.id.tvErrorCelular, 10)
+            val email = validateField(R.id.etEmail, R.id.tvErrorEmail, 5)
             val senha = validateField(R.id.etSenha, R.id.tvErrorSenha, 8)
             val confirm = validateField(R.id.etConfirmarSenha, R.id.tvErrorConfirmarSenha, 8)
-            validateField(R.id.etCep, R.id.tvErrorCep, 8)
-            validateField(R.id.etEndereco, R.id.tvErrorEndereco, 5)
+            val cep = validateField(R.id.etCep, R.id.tvErrorCep, 8)
+            val endereco = validateField(R.id.etEndereco, R.id.tvErrorEndereco, 5)
+
+            // Campos não obrigatórios / tratados de forma diferente
+            val numero = etNumero?.text.toString().trim()
+            val complemento = etComplemento?.text.toString().trim()
+            val genero = if (spGenero?.selectedItemPosition ?: 0 > 0) spGenero?.selectedItem.toString() else ""
 
             // Validar senhas coincidem
             if (senha != confirm && senha.isNotEmpty()) {
@@ -72,9 +92,52 @@ class CadastroActivity : AppCompatActivity() {
                 tvErrorGenero?.visibility = View.GONE
             }
 
+            // Se tudo estiver preenchido corretamente
             if (isValid) {
-                startActivity(Intent(this, TriagemActivity::class.java))
-                finish()
+
+                // Desabilitar o botão para o usuário não clicar duas vezes seguidas
+                it.isEnabled = false
+
+                // 3. Criar usuário no Firebase Authentication (Apenas com Email e Senha)
+                auth.createUserWithEmailAndPassword(email, senha)
+                    .addOnSuccessListener { authResult ->
+
+                        val userId = authResult.user?.uid ?: ""
+
+                        // 4. Montar os dados para mandar pro Firestore (Banco de Dados)
+                        val novoUsuario = Usuario(
+                            id = userId,
+                            nome = nome,
+                            cpf = cpf,
+                            dataNascimento = dataNasc,
+                            genero = genero,
+                            celular = celular,
+                            email = email,
+                            cep = cep,
+                            endereco = endereco,
+                            numero = numero,
+                            complemento = complemento
+                        )
+
+                        // 5. Salvar na coleção "usuarios"
+                        db.collection("usuarios").document(userId)
+                            .set(novoUsuario)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show()
+
+                                // Navega para a próxima tela
+                                startActivity(Intent(this, TriagemActivity::class.java))
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(this, "Falha ao salvar dados: ${e.message}", Toast.LENGTH_LONG).show()
+                                it.isEnabled = true // reabilita botão
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "Erro no cadastro: ${e.message}", Toast.LENGTH_LONG).show()
+                        it.isEnabled = true // reabilita botão
+                    }
             }
         }
     }

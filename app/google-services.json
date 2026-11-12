@@ -1,26 +1,52 @@
 {
   "project_info": {
-    "project_number": "191735206502",
-    "project_id": "academiaunifortelas1-58b7f",
-    "storage_bucket": "academiaunifortelas1-58b7f.firebasestorage.app"
+    "project_number": "630688908127",
+    "project_id": "academiaunifortelas1",
+    "storage_bucket": "academiaunifortelas1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:191735206502:android:5bbf083aa27f77d1a2d3a7",
+        "mobilesdk_app_id": "1:630688908127:android:6faba6998fffb9b329acea",
         "android_client_info": {
           "package_name": "br.com.academiaunifortelas1"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "630688908127-ns7ucn03354uki55s5gu9mf5uoko93hh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.academiaunifortelas1",
+            "certificate_hash": "ee2272c70a8315f2c52a3e27904ad53b811c99bd"
+          }
+        },
+        {
+          "client_id": "630688908127-vrvqqdhjvqf5bdj41u81apkl7fdbdqk3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.academiaunifortelas1",
+            "certificate_hash": "92cb3f8905e2bfa1af4de55dc36876a78cdc3ff1"
+          }
+        },
+        {
+          "client_id": "630688908127-jqg0d9fr26hbo7f6gu4057f76vhqaj54.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDl5Ey6kWFgQ3NlHTJ-hUC2iCZI7E24eyA"
+          "current_key": "AIzaSyAYmBbRIOsQsnbPiPj3ghftIRnKpfeW8ws"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "630688908127-jqg0d9fr26hbo7f6gu4057f76vhqaj54.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
