@@ -60,6 +60,20 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Login fixo para o Administrador
+            if (email == "adm@unifor.br" && senha == "Unifor*123") {
+                getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
+                    .putString("user_role", "admin")
+                    .putString("nome_completo", "Administrador")
+                    .putString("email", "adm@unifor.br")
+                    .apply()
+
+                Toast.makeText(this, "Login de Administrador realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, HomeInstrutorActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
+
             // Rota especial mockada para instrutor
             if (email == "instrutor@unifor.br" && senha == "Unifor*123") {
                 startActivity(Intent(this, HomeInstrutorActivity::class.java))
@@ -80,6 +94,15 @@ class LoginActivity : AppCompatActivity() {
                             .get()
                             .addOnSuccessListener { document ->
                                 if (document != null && document.exists()) {
+                                    val status = document.getString("status") ?: "ativo"
+                                    if (status.equals("pendente", ignoreCase = true)) {
+                                        auth.signOut()
+                                        tvErrorSenha?.text = "Seu cadastro está aguardando aprovação do administrador."
+                                        tvErrorSenha?.visibility = View.VISIBLE
+                                        btnLogin.isEnabled = true
+                                        return@addOnSuccessListener
+                                    }
+
                                     val nomeCompleto = document.getString("nome") ?: ""
                                     val emailUser = document.getString("email") ?: email
                                     val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
@@ -90,13 +113,21 @@ class LoginActivity : AppCompatActivity() {
                                         .putString("primeiro_nome", primeiroNome)
                                         .putString("email", emailUser)
                                         .apply()
+
+                                    Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this, HomeAlunoActivity::class.java))
+                                    finish()
+                                } else {
+                                    Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                    startActivity(Intent(this, HomeAlunoActivity::class.java))
+                                    finish()
                                 }
                             }
+                    } else {
+                        Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, HomeAlunoActivity::class.java))
+                        finish()
                     }
-
-                    Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, HomeAlunoActivity::class.java))
-                    finish()
                 }
                 .addOnFailureListener { e ->
                     tvErrorSenha?.text = "Email ou senha incorretos."

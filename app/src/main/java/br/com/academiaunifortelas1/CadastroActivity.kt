@@ -128,24 +128,25 @@ class CadastroActivity : AppCompatActivity() {
 
                         val userId = authResult.user?.uid ?: ""
 
-                        // 4. Montar os dados para mandar pro Firestore (Banco de Dados)
-                        val novoUsuario = Usuario(
-                            id = userId,
-                            nome = nome,
-                            cpf = cpf,
-                            dataNascimento = dataNasc,
-                            genero = genero,
-                            celular = celular,
-                            email = email,
-                            cep = cep,
-                            endereco = endereco,
-                            numero = numero,
-                            complemento = complemento
+                        // 4. Montar os dados para mandar pro Firestore (Banco de Dados com status Pendente)
+                        val dadosUsuario = hashMapOf(
+                            "id" to userId,
+                            "nome" to nome,
+                            "cpf" to cpf,
+                            "dataNascimento" to dataNasc,
+                            "genero" to genero,
+                            "celular" to celular,
+                            "email" to email,
+                            "cep" to cep,
+                            "endereco" to endereco,
+                            "numero" to numero,
+                            "complemento" to complemento,
+                            "status" to "pendente"
                         )
 
                         // 5. Salvar na coleção "usuarios"
                         db.collection("usuarios").document(userId)
-                            .set(novoUsuario)
+                            .set(dadosUsuario)
                             .addOnSuccessListener {
                                 val primeiroNome = nome.trim().split(" ").firstOrNull() ?: ""
                                 getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
@@ -155,10 +156,12 @@ class CadastroActivity : AppCompatActivity() {
                                     .putString("email", email)
                                     .apply()
 
-                                Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Cadastro realizado! Aguardando aprovação do administrador.", Toast.LENGTH_LONG).show()
 
-                                // Navega para a próxima tela
-                                startActivity(Intent(this, TriagemActivity::class.java))
+                                // Retorna para a tela de Login aguardando liberação
+                                val intent = Intent(this, LoginActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                startActivity(intent)
                                 finish()
                             }
                             .addOnFailureListener { e ->

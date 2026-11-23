@@ -12,6 +12,8 @@ class HomeInstrutorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_instrutor)
 
+        atualizarSaudacao()
+
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
         bottomNav.selectedItemId = R.id.navPainel
 
@@ -31,7 +33,9 @@ class HomeInstrutorActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navPerfilInstrutor -> {
-                    startActivity(Intent(this, PerfilInstrutorActivity::class.java))
+                    val role = getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_role", "")
+                    val targetClass = if (role == "admin") PerfilAdminActivity::class.java else PerfilInstrutorActivity::class.java
+                    startActivity(Intent(this, targetClass))
                     @Suppress("DEPRECATION")
                     overridePendingTransition(0, 0)
                     true
@@ -63,9 +67,24 @@ class HomeInstrutorActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        atualizarSaudacao()
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
         if (bottomNav.selectedItemId != R.id.navPainel) {
              bottomNav.selectedItemId = R.id.navPainel
+        }
+    }
+
+    private fun atualizarSaudacao() {
+        val prefs = getSharedPreferences("UsuarioPref", MODE_PRIVATE)
+        val role = prefs.getString("user_role", "")
+        val nome = prefs.getString("nome_completo", "")
+        val tvSaudacao = findViewById<android.widget.TextView>(R.id.tvSaudacaoNome)
+        if (tvSaudacao != null) {
+            if (role == "admin" || nome.equals("Administrador", ignoreCase = true)) {
+                tvSaudacao.text = "Olá, Administrador!"
+            } else {
+                tvSaudacao.text = "Olá, Prof. Yuri!"
+            }
         }
     }
 }

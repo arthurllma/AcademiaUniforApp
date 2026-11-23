@@ -59,6 +59,7 @@
                         android:textColor="@color/text_gray"
                         android:textSize="14sp" />
                     <TextView
+                        android:id="@+id/tvSaudacaoNome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Olá, Prof. Yuri!"

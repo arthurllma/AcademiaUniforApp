@@ -38,7 +38,9 @@ class AlunosInstrutorActivity : AppCompatActivity() {
                 }
                 R.id.navAlunos -> true
                 R.id.navPerfilInstrutor -> {
-                    startActivity(Intent(this, PerfilInstrutorActivity::class.java))
+                    val role = getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_role", "")
+                    val targetClass = if (role == "admin") PerfilAdminActivity::class.java else PerfilInstrutorActivity::class.java
+                    startActivity(Intent(this, targetClass))
                     @Suppress("DEPRECATION")
                     overridePendingTransition(0, 0)
                     finish()

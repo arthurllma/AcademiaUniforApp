@@ -12,6 +12,14 @@ class PerfilInstrutorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val role = getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_role", "")
+        if (role == "admin") {
+            startActivity(Intent(this, PerfilAdminActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_perfil_instrutor)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
@@ -50,6 +58,10 @@ class PerfilInstrutorActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.rlAulasColetivas).setOnClickListener {
             startActivity(Intent(this, AulasColetivasInstrutorActivity::class.java))
+        }
+
+        findViewById<View>(R.id.rlGerenciarFuncionarios)?.setOnClickListener {
+            startActivity(Intent(this, GerenciarFuncionariosActivity::class.java))
         }
 
         findViewById<View>(R.id.rlCatalogoExercicios)?.setOnClickListener {
