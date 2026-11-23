@@ -51,6 +51,8 @@
         <activity android:name=".MontarFichaAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".PerfilInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".AulasColetivasInstrutorActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CatalogoExerciciosActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".AdicionarExercicioActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ParqActivity"

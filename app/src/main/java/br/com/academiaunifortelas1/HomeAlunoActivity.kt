@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,8 @@ class HomeAlunoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home_aluno)
+
+        carregarSaudacaoUsuario()
 
         val viewFlipper = findViewById<ViewFlipper>(R.id.viewFlipperAluno)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
@@ -53,6 +56,37 @@ class HomeAlunoActivity : AppCompatActivity() {
         handleIntent(intent)
     }
 
+    private fun carregarSaudacaoUsuario() {
+        val tvSaudacao = findViewById<TextView>(R.id.tvSaudacaoAluno) ?: return
+
+        val prefs = getSharedPreferences("UsuarioPref", MODE_PRIVATE)
+        val primeiroNomeLocal = prefs.getString("primeiro_nome", "") ?: ""
+
+        if (primeiroNomeLocal.isNotEmpty()) {
+            tvSaudacao.text = "Olá, $primeiroNomeLocal!"
+        }
+
+        val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        if (!userId.isNullOrEmpty()) {
+            com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                .collection("usuarios")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val nomeCompleto = document.getString("nome") ?: ""
+                        if (nomeCompleto.isNotEmpty()) {
+                            val pNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
+                            if (pNome.isNotEmpty()) {
+                                tvSaudacao.text = "Olá, $pNome!"
+                                prefs.edit().putString("primeiro_nome", pNome).putString("nome_completo", nomeCompleto).apply()
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -69,8 +103,8 @@ class HomeAlunoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        carregarSaudacaoUsuario()
         // Garante que a barra selecione o item correto dependendo da view mostrada
-        // Isso resolve bugs visuais na bottom bar ao voltar da tela do mapa ou perfil usando o botão de "voltar" do celular
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         val viewFlipper = findViewById<ViewFlipper>(R.id.viewFlipperAluno)
         when (viewFlipper.displayedChild) {

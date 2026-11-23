@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
 class IniciarTreinoActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -14,21 +15,36 @@ class IniciarTreinoActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnVoltarMenu)?.setOnClickListener { finish() }
 
-        findViewById<View>(R.id.btnIniciarExercicio)?.setOnClickListener {
-            startActivity(Intent(this, ExercicioAlunoActivity::class.java))
+        fun setupExercicio(btnIniciarId: Int, btnEditarId: Int, btnOndeFicaId: Int, nomeExercicio: String) {
+            findViewById<View>(btnIniciarId)?.setOnClickListener {
+                val intent = Intent(this, ExercicioAlunoActivity::class.java)
+                intent.putExtra("exercicio_nome", nomeExercicio)
+                startActivity(intent)
+            }
+
+            findViewById<View>(btnEditarId)?.setOnClickListener {
+                val intent = Intent(this, EditarExercicioActivity::class.java)
+                intent.putExtra("exercicio_nome", nomeExercicio)
+                startActivity(intent)
+            }
+
+            findViewById<View>(btnOndeFicaId)?.setOnClickListener {
+                val intent = Intent(this, MinimapaAlunoActivity::class.java)
+                intent.putExtra("exercicio_nome", nomeExercicio)
+                startActivity(intent)
+            }
         }
 
-        findViewById<View>(R.id.btnEditarExercicio)?.setOnClickListener {
-            startActivity(Intent(this, EditarExercicioActivity::class.java))
-        }
-
-        findViewById<View>(R.id.btnOndeFica)?.setOnClickListener {
-            startActivity(Intent(this, MinimapaAlunoActivity::class.java))
-        }
+        setupExercicio(R.id.btnIniciarExercicio1, R.id.btnEditarExercicio1, R.id.btnOndeFica1, "Supino Reto")
+        setupExercicio(R.id.btnIniciarExercicio2, R.id.btnEditarExercicio2, R.id.btnOndeFica2, "Supino Inclinado")
+        setupExercicio(R.id.btnIniciarExercicio3, R.id.btnEditarExercicio3, R.id.btnOndeFica3, "Crucifixo")
+        setupExercicio(R.id.btnIniciarExercicio4, R.id.btnEditarExercicio4, R.id.btnOndeFica4, "Tríceps Pulley")
+        setupExercicio(R.id.btnIniciarExercicio5, R.id.btnEditarExercicio5, R.id.btnOndeFica5, "Tríceps Francês")
 
         // Bottom nav
         findViewById<View>(R.id.navHome)?.setOnClickListener {
-            startActivity(Intent(this, HomeAlunoActivity::class.java))
+            val intent = Intent(this, HomeAlunoActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }

@@ -91,7 +91,7 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_rounded_field"
                     android:drawableEnd="@drawable/ic_email"
-                    android:hint="joao.silva@email.com"
+                    android:hint="Digite seu e-mail de login"
                     android:inputType="textEmailAddress"
                     android:paddingHorizontal="16dp"
                     android:textColor="@color/dark_navy"

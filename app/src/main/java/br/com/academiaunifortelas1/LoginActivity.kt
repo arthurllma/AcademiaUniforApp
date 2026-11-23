@@ -72,6 +72,28 @@ class LoginActivity : AppCompatActivity() {
             // Autenticar com o Firebase Authentication
             auth.signInWithEmailAndPassword(email, senha)
                 .addOnSuccessListener {
+                    val userId = auth.currentUser?.uid ?: ""
+                    if (userId.isNotEmpty()) {
+                        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                            .collection("usuarios")
+                            .document(userId)
+                            .get()
+                            .addOnSuccessListener { document ->
+                                if (document != null && document.exists()) {
+                                    val nomeCompleto = document.getString("nome") ?: ""
+                                    val emailUser = document.getString("email") ?: email
+                                    val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
+
+                                    getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
+                                        .putString("user_id", userId)
+                                        .putString("nome_completo", nomeCompleto)
+                                        .putString("primeiro_nome", primeiroNome)
+                                        .putString("email", emailUser)
+                                        .apply()
+                                }
+                            }
+                    }
+
                     Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, HomeAlunoActivity::class.java))
                     finish()

@@ -147,6 +147,14 @@ class CadastroActivity : AppCompatActivity() {
                         db.collection("usuarios").document(userId)
                             .set(novoUsuario)
                             .addOnSuccessListener {
+                                val primeiroNome = nome.trim().split(" ").firstOrNull() ?: ""
+                                getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
+                                    .putString("user_id", userId)
+                                    .putString("nome_completo", nome)
+                                    .putString("primeiro_nome", primeiroNome)
+                                    .putString("email", email)
+                                    .apply()
+
                                 Toast.makeText(this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show()
 
                                 // Navega para a próxima tela

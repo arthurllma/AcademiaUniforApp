@@ -58,7 +58,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/btnEditarExercicio"
+                        android:id="@+id/btnEditarExercicio1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_top_bar_back"
@@ -79,7 +79,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/btnIniciarExercicio"
+                        android:id="@+id/btnIniciarExercicio1"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -96,7 +96,7 @@
                         android:layout_height="wrap_content" />
 
                     <Button
-                        android:id="@+id/btnOndeFica"
+                        android:id="@+id/btnOndeFica1"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -135,6 +135,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/btnEditarExercicio2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_top_bar_back"
@@ -155,6 +156,7 @@
                     android:orientation="horizontal">
 
                     <Button
+                        android:id="@+id/btnIniciarExercicio2"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -171,6 +173,7 @@
                         android:layout_height="wrap_content" />
 
                     <Button
+                        android:id="@+id/btnOndeFica2"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -209,6 +212,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/btnEditarExercicio3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_top_bar_back"
@@ -229,6 +233,7 @@
                     android:orientation="horizontal">
 
                     <Button
+                        android:id="@+id/btnIniciarExercicio3"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -245,6 +250,7 @@
                         android:layout_height="wrap_content" />
 
                     <Button
+                        android:id="@+id/btnOndeFica3"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -283,6 +289,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/btnEditarExercicio4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_top_bar_back"
@@ -303,6 +310,7 @@
                     android:orientation="horizontal">
 
                     <Button
+                        android:id="@+id/btnIniciarExercicio4"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -319,6 +327,7 @@
                         android:layout_height="wrap_content" />
 
                     <Button
+                        android:id="@+id/btnOndeFica4"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -357,6 +366,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/btnEditarExercicio5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_top_bar_back"
@@ -377,6 +387,7 @@
                     android:orientation="horizontal">
 
                     <Button
+                        android:id="@+id/btnIniciarExercicio5"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"
@@ -393,6 +404,7 @@
                         android:layout_height="wrap_content" />
 
                     <Button
+                        android:id="@+id/btnOndeFica5"
                         android:layout_width="0dp"
                         android:layout_height="48dp"
                         android:layout_weight="1"

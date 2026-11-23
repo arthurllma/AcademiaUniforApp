@@ -52,6 +52,10 @@ class PerfilInstrutorActivity : AppCompatActivity() {
             startActivity(Intent(this, AulasColetivasInstrutorActivity::class.java))
         }
 
+        findViewById<View>(R.id.rlCatalogoExercicios)?.setOnClickListener {
+            startActivity(Intent(this, CatalogoExerciciosActivity::class.java))
+        }
+
         findViewById<View>(R.id.rlDadosPessoais).setOnClickListener {
             Toast.makeText(this, "Funcionalidade em desenvolvimento", Toast.LENGTH_SHORT).show()
         }

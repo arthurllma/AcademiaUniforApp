@@ -13,6 +13,8 @@ import java.util.Locale
 import android.os.Handler
 import android.os.Looper
 
+import br.com.academiaunifortelas1.repository.ExerciciosRepository
+
 class ExercicioAlunoActivity : AppCompatActivity() {
 
     private var currentSerie = 1
@@ -49,9 +51,24 @@ class ExercicioAlunoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_exercicio_aluno)
 
         findViewById<View>(R.id.btnVoltarMenu)?.setOnClickListener { finish() }
+
+        val exercicioId = intent.getStringExtra("exercicio_id")
+        val nomeExercicio = intent.getStringExtra("exercicio_nome") ?: "Supino Reto"
+        val exercicio = (if (!exercicioId.isNullOrEmpty()) ExerciciosRepository.listaExercicios.find { it.id == exercicioId } else null)
+            ?: ExerciciosRepository.buscarPorNome(nomeExercicio)
+            ?: ExerciciosRepository.listaExercicios.firstOrNull()
+
+        if (exercicio != null) {
+            findViewById<TextView>(R.id.tvExercicioNome)?.text = exercicio.nome
+        }
         
         findViewById<View>(R.id.btnVerExemplo)?.setOnClickListener {
-            startActivity(Intent(this, ExemplosAlunoActivity::class.java))
+            val intent = Intent(this, ExemplosAlunoActivity::class.java)
+            if (exercicio != null) {
+                intent.putExtra("exercicio_id", exercicio.id)
+                intent.putExtra("exercicio_nome", exercicio.nome)
+            }
+            startActivity(intent)
         }
 
         tvSerie = findViewById(R.id.tvSerieTitle)
