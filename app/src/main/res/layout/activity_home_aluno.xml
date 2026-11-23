@@ -320,6 +320,16 @@
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="3×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="16kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
                 </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Tríceps Pulley" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="4×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="35kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_card_blue" android:orientation="horizontal" android:gravity="center_vertical" android:padding="16dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Tríceps Francês" android:textColor="#0F172A" android:textSize="16sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="3×12" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/bg_badge" android:paddingHorizontal="10dp" android:paddingVertical="4dp" android:text="14kg" android:textColor="#2558F5" android:textSize="12sp" android:textStyle="bold" />
+                </LinearLayout>
 
                 <Space android:layout_width="match_parent" android:layout_height="32dp" />
             </LinearLayout>
@@ -356,20 +366,6 @@
         </LinearLayout>
 
     </ViewFlipper>
-
-    <!-- Chat FAB -->
-    <ImageView
-        android:id="@+id/fabChat"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_above="@id/bottomNav"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_chat_fab"
-        android:elevation="6dp"
-        android:stateListAnimator="@null"
-        android:contentDescription="Chat" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

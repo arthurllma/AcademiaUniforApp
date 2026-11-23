@@ -47,8 +47,19 @@ class CadastroActivity : AppCompatActivity() {
         val spGenero = findViewById<Spinner>(R.id.spGenero)
         val genderOptions = arrayOf("Selecionar", "Masculino", "Feminino", "Outro", "Prefiro não informar")
         val adapter = ArrayAdapter(this, R.layout.spinner_item, genderOptions)
-        adapter.setDropDownViewResource(R.layout.spinner_item)
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spGenero?.adapter = adapter
+
+        val etCpf = findViewById<EditText>(R.id.etCpf)
+        val etDataNascimento = findViewById<EditText>(R.id.etDataNascimento)
+        val etCelular = findViewById<EditText>(R.id.etCelular)
+        val etCep = findViewById<EditText>(R.id.etCep)
+
+        // Aplicar máscaras nos campos de texto
+        applyMask(etCpf, "###.###.###-##", 11)
+        applyMask(etDataNascimento, "##/##/####", 8)
+        applyMask(etCelular, "(##) #####-####", 11)
+        applyMask(etCep, "#####-###", 8)
 
         val etNumero = findViewById<EditText>(R.id.etNumero)
         val etComplemento = findViewById<EditText>(R.id.etComplemento)
@@ -76,13 +87,13 @@ class CadastroActivity : AppCompatActivity() {
 
             // Captura todos os textos enquanto valida
             val nome = validateField(R.id.etNomeCompleto, R.id.tvErrorNomeCompleto)
-            val cpf = validateField(R.id.etCpf, R.id.tvErrorCpf, 11)
-            val dataNasc = validateField(R.id.etDataNascimento, R.id.tvErrorDataNascimento, 8)
-            val celular = validateField(R.id.etCelular, R.id.tvErrorCelular, 10)
+            val cpf = validateField(R.id.etCpf, R.id.tvErrorCpf, 14)
+            val dataNasc = validateField(R.id.etDataNascimento, R.id.tvErrorDataNascimento, 10)
+            val celular = validateField(R.id.etCelular, R.id.tvErrorCelular, 14)
             val email = validateField(R.id.etEmail, R.id.tvErrorEmail, 5)
             val senha = validateField(R.id.etSenha, R.id.tvErrorSenha, 8)
             val confirm = validateField(R.id.etConfirmarSenha, R.id.tvErrorConfirmarSenha, 8)
-            val cep = validateField(R.id.etCep, R.id.tvErrorCep, 8)
+            val cep = validateField(R.id.etCep, R.id.tvErrorCep, 9)
             val endereco = validateField(R.id.etEndereco, R.id.tvErrorEndereco, 5)
 
             // Campos não obrigatórios / tratados de forma diferente
@@ -153,5 +164,46 @@ class CadastroActivity : AppCompatActivity() {
                     }
             }
         }
+    }
+
+    private fun applyMask(editText: EditText?, mask: String, maxDigits: Int) {
+        editText?.addTextChangedListener(object : android.text.TextWatcher {
+            private var isUpdating = false
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val str = s.toString().replace(Regex("[^\\d]"), "")
+                if (isUpdating) {
+                    isUpdating = false
+                    return
+                }
+
+                val cleanStr = if (str.length > maxDigits) str.substring(0, maxDigits) else str
+
+                var formatted = ""
+                var i = 0
+                for (m in mask.toCharArray()) {
+                    if (m != '#') {
+                        if (i < cleanStr.length) {
+                            formatted += m
+                        }
+                    } else {
+                        if (i < cleanStr.length) {
+                            formatted += cleanStr[i]
+                            i++
+                        } else {
+                            break
+                        }
+                    }
+                }
+
+                isUpdating = true
+                editText.setText(formatted)
+                editText.setSelection(formatted.length)
+            }
+
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
     }
 }
