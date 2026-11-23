@@ -12,6 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import br.com.academiaunifortelas1.model.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,6 +29,15 @@ class CadastroActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_cadastro)
 
+        val mainView = findViewById<View>(R.id.main)
+        if (mainView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainView) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(0, systemBars.top, 0, systemBars.bottom)
+                insets
+            }
+        }
+
         // 2. Inicializar Firebase
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -35,7 +46,9 @@ class CadastroActivity : AppCompatActivity() {
 
         val spGenero = findViewById<Spinner>(R.id.spGenero)
         val genderOptions = arrayOf("Selecionar", "Masculino", "Feminino", "Outro", "Prefiro não informar")
-        spGenero?.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genderOptions)
+        val adapter = ArrayAdapter(this, R.layout.spinner_item, genderOptions)
+        adapter.setDropDownViewResource(R.layout.spinner_item)
+        spGenero?.adapter = adapter
 
         val etNumero = findViewById<EditText>(R.id.etNumero)
         val etComplemento = findViewById<EditText>(R.id.etComplemento)

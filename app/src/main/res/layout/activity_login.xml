@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8FAFC"
@@ -46,10 +47,12 @@
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_rounded_field"
+            android:backgroundTint="@null"
             android:hint="Digite seu email"
             android:inputType="textEmailAddress"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="20dp"
             android:textColor="#0F172A"
+            android:textColorHint="#94A3B8"
             android:textSize="14sp" />
 
         <TextView
@@ -83,10 +86,12 @@
             android:layout_height="50dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/bg_rounded_field"
+            android:backgroundTint="@null"
             android:hint="Digite sua senha"
             android:inputType="textPassword"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="20dp"
             android:textColor="#0F172A"
+            android:textColorHint="#94A3B8"
             android:textSize="14sp" />
 
         <TextView
