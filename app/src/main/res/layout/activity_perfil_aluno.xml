@@ -303,9 +303,9 @@
                         android:layout_marginStart="6dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_button_outline"
-                        android:text="📥 Baixar PDF"
+                        android:text="Baixar PDF"
                         android:textAllCaps="false"
-                        android:textColor="@color/primary_blue"
+                        android:textColor="@color/white"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>

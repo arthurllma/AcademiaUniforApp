@@ -38,7 +38,10 @@
         <activity android:name=".TriagemEtapa4Activity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".TriagemEtapa5Activity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".IniciarTreinoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".IniciarTreinoBActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".IniciarTreinoCActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ExemplosAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ExemplosListaAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MinimapaAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MapaActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".PerfilAlunoActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
