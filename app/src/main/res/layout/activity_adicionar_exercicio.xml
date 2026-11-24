@@ -209,9 +209,9 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/bg_button_outline"
                 android:backgroundTint="#F0F7FF"
-                android:text="👁 Visualizar exemplo do aluno"
+                android:text="Visualizar Exemplo do Aluno"
                 android:textAllCaps="false"
-                android:textColor="#1D49EE"
+                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:visibility="gone" />

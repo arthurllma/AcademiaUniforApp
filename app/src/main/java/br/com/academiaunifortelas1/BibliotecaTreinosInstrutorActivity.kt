@@ -2,6 +2,7 @@ package br.com.academiaunifortelas1
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -50,6 +51,25 @@ class BibliotecaTreinosInstrutorActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnMontarNovoTreino).setOnClickListener {
             startActivity(Intent(this, MontarTreinoInstrutorActivity::class.java))
+        }
+
+        fun abrirMontarTreino(tipo: String, nome: String) {
+            val intent = Intent(this, MontarTreinoInstrutorActivity::class.java)
+            intent.putExtra("treino_tipo", tipo)
+            intent.putExtra("treino_nome", nome)
+            startActivity(intent)
+        }
+
+        findViewById<View>(R.id.cardTreinoA)?.setOnClickListener {
+            abrirMontarTreino("A", "Hipertrofia • Peito e Tríceps")
+        }
+
+        findViewById<View>(R.id.cardTreinoB)?.setOnClickListener {
+            abrirMontarTreino("B", "Hipertrofia • Pernas e Glúteos")
+        }
+
+        findViewById<View>(R.id.cardTreinoC)?.setOnClickListener {
+            abrirMontarTreino("C", "Hipertrofia • Costas e Bíceps")
         }
     }
 }

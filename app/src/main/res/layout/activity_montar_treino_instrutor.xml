@@ -38,6 +38,7 @@
                 android:textColor="@color/text_gray"
                 android:textSize="12sp" />
             <TextView
+                android:id="@+id/tvHeaderTitulo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Montar treino"
@@ -111,6 +112,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/etNomeTreino"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
@@ -142,8 +144,8 @@
                         android:textColor="@color/primary_blue"
                         android:textSize="14sp"
                         android:textStyle="bold" />
-                    <!-- Simulação de dropdown com EditText readonly -->
                     <EditText
+                        android:id="@+id/etObjetivoTreino"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:layout_marginTop="8dp"
@@ -153,9 +155,7 @@
                         android:paddingHorizontal="16dp"
                         android:text="Hipertrofia"
                         android:textColor="@color/dark_navy"
-                        android:textSize="16sp"
-                        android:focusable="false"
-                        android:clickable="true" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <Space android:layout_width="16dp" android:layout_height="wrap_content" />
@@ -172,8 +172,8 @@
                         android:textColor="@color/primary_blue"
                         android:textSize="14sp"
                         android:textStyle="bold" />
-                    <!-- Simulação de dropdown com EditText readonly -->
                     <EditText
+                        android:id="@+id/etNivelTreino"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
                         android:layout_marginTop="8dp"
@@ -183,9 +183,7 @@
                         android:paddingHorizontal="16dp"
                         android:text="Intermediário"
                         android:textColor="@color/dark_navy"
-                        android:textSize="16sp"
-                        android:focusable="false"
-                        android:clickable="true"/>
+                        android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -207,10 +205,13 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tvTabA"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/bg_pill_blue_solid"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:text="Treino A"
                     android:textColor="@color/white"
@@ -218,9 +219,12 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvTabB"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:text="Treino B"
                     android:textColor="@color/text_gray"
@@ -228,9 +232,12 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvTabC"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:text="Treino C"
                     android:textColor="@color/text_gray"
@@ -248,6 +255,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/etSelecionarExercicio"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
@@ -255,23 +263,9 @@
                 android:backgroundTint="#F1F5F9"
                 android:drawableEnd="@android:drawable/arrow_down_float"
                 android:paddingHorizontal="16dp"
-                android:text="Supino Reto"
+                android:hint="Digite o nome do exercício"
                 android:textColor="@color/dark_navy"
-                android:textSize="16sp"
-                android:focusable="false"
-                android:clickable="true" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/bg_button_outline"
-                android:backgroundTint="@color/primary_blue"
-                android:text="+ Criar exercício personalizado"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <!-- Grade Séries / Reps / Carga -->
             <LinearLayout
@@ -294,6 +288,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etSeries"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -321,6 +316,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etReps"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -348,6 +344,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etCarga"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -381,6 +378,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etDescanso"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -407,6 +405,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etCadencia"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -430,6 +429,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/etObservacoes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="80dp"
@@ -439,11 +439,12 @@
                 android:gravity="top|start"
                 android:inputType="textMultiLine"
                 android:padding="16dp"
-                android:text="Manter as escápulas apoiadas e controlar a descida."
+                android:hint="Manter as escápulas apoiadas e controlar a descida."
                 android:textColor="@color/dark_navy"
                 android:textSize="14sp" />
 
             <Button
+                android:id="@+id/btnAdicionarExercicioItem"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
@@ -460,6 +461,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp">
                 <TextView
+                    android:id="@+id/tvResumoExerciciosTitulo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Exercícios do Treino A"
@@ -467,132 +469,33 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
                 <TextView
+                    android:id="@+id/tvResumoExerciciosCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:text="2 exercícios"
+                    android:text="5 exercícios"
                     android:textColor="@color/text_gray"
                     android:textSize="14sp" />
             </RelativeLayout>
 
-            <!-- Exercicio 1 -->
-            <RelativeLayout
+            <!-- Container Dinâmico dos Exercícios do Treino -->
+            <LinearLayout
+                android:id="@+id/llContainerExerciciosMontar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_button_outline"
-                android:backgroundTint="#F1F5F9"
-                android:padding="16dp">
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Supino Reto"
-                        android:textColor="@color/dark_navy"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="4 × 12 • 60 kg • 60 s"
-                        android:textColor="@color/text_gray"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                <!-- Renderizado via Kotlin -->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/shape_circle"
-                        android:backgroundTint="@color/primary_blue"
-                        android:padding="8dp"
-                        android:src="@android:drawable/ic_menu_edit"
-                        app:tint="@color/white" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/shape_circle"
-                        android:backgroundTint="@color/primary_blue"
-                        android:padding="8dp"
-                        android:src="@android:drawable/ic_menu_delete"
-                        app:tint="@color/white" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <!-- Exercicio 2 -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_button_outline"
-                android:backgroundTint="#F1F5F9"
-                android:padding="16dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Crucifixo"
-                        android:textColor="@color/dark_navy"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="3 × 15 • 12 kg • 45 s"
-                        android:textColor="@color/text_gray"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/shape_circle"
-                        android:backgroundTint="@color/primary_blue"
-                        android:padding="8dp"
-                        android:src="@android:drawable/ic_menu_edit"
-                        app:tint="@color/white" />
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/shape_circle"
-                        android:backgroundTint="@color/primary_blue"
-                        android:padding="8dp"
-                        android:src="@android:drawable/ic_menu_delete"
-                        app:tint="@color/white" />
-                </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
 
             <Button
+                android:id="@+id/btnSalvarTreino"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
                 android:background="@drawable/bg_rounded_button"
-                android:text="⛃ Salvar treino na biblioteca"
+                android:text="Salvar treino na biblioteca"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="16sp"

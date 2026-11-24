@@ -3,7 +3,9 @@ package br.com.academiaunifortelas1
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import br.com.academiaunifortelas1.repository.AlunosRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeInstrutorActivity : AppCompatActivity() {
@@ -13,6 +15,7 @@ class HomeInstrutorActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home_instrutor)
 
         atualizarSaudacao()
+        atualizarCountSemFicha()
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
         bottomNav.selectedItemId = R.id.navPainel
@@ -44,9 +47,14 @@ class HomeInstrutorActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<View>(R.id.btnMontarFichaCard)?.setOnClickListener {
-            bottomNav.selectedItemId = R.id.navMontarFicha
+        val abrirSemFichaListener = View.OnClickListener {
+            val intent = Intent(this, AlunosInstrutorActivity::class.java)
+            intent.putExtra("filtro_status", "sem_ficha")
+            startActivity(intent)
         }
+
+        findViewById<View>(R.id.cardSemFicha)?.setOnClickListener(abrirSemFichaListener)
+        findViewById<View>(R.id.btnMontarFichaCard)?.setOnClickListener(abrirSemFichaListener)
         
         handleIntent(intent)
     }
@@ -68,6 +76,7 @@ class HomeInstrutorActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         atualizarSaudacao()
+        atualizarCountSemFicha()
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
         if (bottomNav.selectedItemId != R.id.navPainel) {
              bottomNav.selectedItemId = R.id.navPainel
@@ -78,7 +87,7 @@ class HomeInstrutorActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("UsuarioPref", MODE_PRIVATE)
         val role = prefs.getString("user_role", "")
         val nome = prefs.getString("nome_completo", "")
-        val tvSaudacao = findViewById<android.widget.TextView>(R.id.tvSaudacaoNome)
+        val tvSaudacao = findViewById<TextView>(R.id.tvSaudacaoNome)
         if (tvSaudacao != null) {
             if (role == "admin" || nome.equals("Administrador", ignoreCase = true)) {
                 tvSaudacao.text = "Olá, Administrador!"
@@ -86,5 +95,10 @@ class HomeInstrutorActivity : AppCompatActivity() {
                 tvSaudacao.text = "Olá, Prof. Yuri!"
             }
         }
+    }
+
+    private fun atualizarCountSemFicha() {
+        val count = AlunosRepository.getQuantidadeSemFicha()
+        findViewById<TextView>(R.id.tvCountSemFicha)?.text = count.toString()
     }
 }

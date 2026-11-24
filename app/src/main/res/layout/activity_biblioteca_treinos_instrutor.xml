@@ -76,7 +76,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <!-- Lista de Treinos (Mock) -->
+            <!-- Lista de Treinos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,11 +85,14 @@
 
                 <!-- Item Treino A -->
                 <RelativeLayout
+                    android:id="@+id/cardTreinoA"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/bg_button_outline"
                     android:backgroundTint="#F1F5F9"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:padding="16dp">
 
                     <View
@@ -145,11 +148,14 @@
 
                 <!-- Item Treino B -->
                 <RelativeLayout
+                    android:id="@+id/cardTreinoB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/bg_button_outline"
                     android:backgroundTint="#F1F5F9"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:padding="16dp">
 
                     <View
@@ -181,14 +187,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Treino B — Costas"
+                            android:text="Treino B — Pernas"
                             android:textColor="@color/dark_navy"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="4 exercícios • 40 min"
+                            android:text="5 exercícios • 50 min"
                             android:textColor="@color/text_gray"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -205,11 +211,14 @@
 
                 <!-- Item Treino C -->
                 <RelativeLayout
+                    android:id="@+id/cardTreinoC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
                     android:background="@drawable/bg_button_outline"
                     android:backgroundTint="#F1F5F9"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:padding="16dp">
 
                     <View
