@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class TriagemEtapa5Activity : AppCompatActivity() {
 
@@ -24,14 +27,27 @@ class TriagemEtapa5Activity : AppCompatActivity() {
         }
 
         btnConcluirTriagem.setOnClickListener {
-            // Atualizar banco de dados aqui indicando que a triagem do usuario foi concluida
+            val auth = FirebaseAuth.getInstance()
+            val db = FirebaseFirestore.getInstance()
+            val userId = auth.currentUser?.uid
+                ?: getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_id", "") ?: ""
 
-            // Navega pra Home do Aluno
-            val intent = Intent(this, HomeAlunoActivity::class.java)
+            if (userId.isNotEmpty()) {
+                db.collection("usuarios").document(userId)
+                    .update("status", "pendente", "triagemConcluida", true)
+            }
+
+            auth.signOut()
+
+            Toast.makeText(this, "Cadastro e triagem concluídos! Aguardando aprovação do administrador.", Toast.LENGTH_LONG).show()
+
+            // Retorna para a tela de Login aguardando autorização do ADM
+            val intent = Intent(this, LoginActivity::class.java)
             // Limpa toda a pilha de telas de Triagem (e Cadastro se houver) 
             // garantindo que o botao voltar não retorne para o fluxo de Triagem
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+            finish()
         }
     }
 }

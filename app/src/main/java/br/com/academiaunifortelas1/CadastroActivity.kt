@@ -156,10 +156,10 @@ class CadastroActivity : AppCompatActivity() {
                                     .putString("email", email)
                                     .apply()
 
-                                Toast.makeText(this, "Cadastro realizado! Aguardando aprovação do administrador.", Toast.LENGTH_LONG).show()
+                                Toast.makeText(this, "Cadastro realizado! Preencha a triagem para continuar.", Toast.LENGTH_SHORT).show()
 
-                                // Retorna para a tela de Login aguardando liberação
-                                val intent = Intent(this, LoginActivity::class.java)
+                                // Navega diretamente para o fluxo de Triagem
+                                val intent = Intent(this, TriagemActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 startActivity(intent)
                                 finish()
