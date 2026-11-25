@@ -8,13 +8,25 @@ import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import br.com.academiaunifortelas1.repository.TriagemDataManager
+import com.google.firebase.auth.FirebaseAuth
 
 class TriagemEtapa3Activity : AppCompatActivity() {
+
+    private var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_triagem_etapa3)
+
+        userId = intent.getStringExtra("USER_UID")
+            ?: intent.getStringExtra("user_id")
+            ?: FirebaseAuth.getInstance().currentUser?.uid
+            ?: getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_id", "") ?: ""
+
+        val btnVoltar = findViewById<View>(R.id.btnVoltarTriagem)
+        btnVoltar?.setOnClickListener { finish() }
 
         val swQ1 = findViewById<Switch>(R.id.swQ1)
         val swQ2 = findViewById<Switch>(R.id.swQ2)
@@ -41,7 +53,28 @@ class TriagemEtapa3Activity : AppCompatActivity() {
         bindSwitch(swQ5, tvAlertQ5)
 
         findViewById<Button>(R.id.btnProsseguirTriagem3)?.setOnClickListener {
-            startActivity(Intent(this, TriagemEtapa4Activity::class.java))
+            val listAlerts = mutableListOf<String>()
+            if (swQ1.isChecked) listAlerts.add("Problema cardíaco")
+            if (swQ2.isChecked) listAlerts.add("Dor torácica")
+            if (swQ3.isChecked) listAlerts.add("Tontura / desmaio")
+            if (swQ4.isChecked) listAlerts.add("Lesão osteoarticular")
+            if (swQ5.isChecked) listAlerts.add("Uso anti-hipertensivo")
+
+            val hasRestrictions = listAlerts.isNotEmpty()
+            val statusParqText = if (hasRestrictions) listAlerts.joinToString(", ") else "Sem restrições"
+
+            TriagemDataManager.swQ1 = swQ1.isChecked
+            TriagemDataManager.swQ2 = swQ2.isChecked
+            TriagemDataManager.swQ3 = swQ3.isChecked
+            TriagemDataManager.swQ4 = swQ4.isChecked
+            TriagemDataManager.swQ5 = swQ5.isChecked
+            TriagemDataManager.parqRestricoes = hasRestrictions
+            TriagemDataManager.statusParq = statusParqText
+
+            val nextIntent = Intent(this, TriagemEtapa4Activity::class.java)
+            nextIntent.putExtra("USER_UID", userId)
+            nextIntent.putExtra("user_id", userId)
+            startActivity(nextIntent)
         }
     }
 }

@@ -6,16 +6,24 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import br.com.academiaunifortelas1.repository.AlunosRepository
+import br.com.academiaunifortelas1.repository.FichaTreinoRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class HomeInstrutorActivity : AppCompatActivity() {
+
+    private lateinit var tvContadorSemFicha: TextView
+    private var listenerFirestore: ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_instrutor)
 
+        tvContadorSemFicha = findViewById(R.id.tvContadorSemFicha)
+
         atualizarSaudacao()
-        atualizarCountSemFicha()
+        iniciarOuvinteSemFicha()
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
         bottomNav.selectedItemId = R.id.navPainel
@@ -41,6 +49,7 @@ class HomeInstrutorActivity : AppCompatActivity() {
                     startActivity(Intent(this, targetClass))
                     @Suppress("DEPRECATION")
                     overridePendingTransition(0, 0)
+                    finish()
                     true
                 }
                 else -> false
@@ -55,8 +64,53 @@ class HomeInstrutorActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.cardSemFicha)?.setOnClickListener(abrirSemFichaListener)
         findViewById<View>(R.id.btnMontarFichaCard)?.setOnClickListener(abrirSemFichaListener)
-        
+
         handleIntent(intent)
+    }
+
+    private fun iniciarOuvinteSemFicha() {
+        val db = FirebaseFirestore.getInstance()
+        listenerFirestore = db.collection("usuarios")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) {
+                    val localCount = AlunosRepository.getQuantidadeSemFicha()
+                    tvContadorSemFicha.text = localCount.toString()
+                    return@addSnapshotListener
+                }
+
+                var countSemFicha = 0
+                var encontrouAlunos = false
+
+                for (doc in snapshot.documents) {
+                    val tipo = doc.getString("tipo") ?: "aluno"
+                    if (tipo.equals("aluno", ignoreCase = true)) {
+                        encontrouAlunos = true
+                        val dataVencimento = doc.getTimestamp("dataVencimento")
+                        val statusFichaDoc = doc.getString("statusFicha")
+                        val hasFicha = doc.get("hasFicha") as? Boolean
+                            ?: (statusFichaDoc != null && statusFichaDoc != "Aguardando Ficha")
+
+                        val statusFichaCalculado = statusFichaDoc
+                            ?: FichaTreinoRepository.calcularStatusFicha(hasFicha, dataVencimento)
+
+                        if (statusFichaCalculado == "Aguardando Ficha" || statusFichaCalculado == "Ficha Vencida" || statusFichaCalculado.isEmpty()) {
+                            countSemFicha++
+                        }
+                    }
+                }
+
+                if (encontrouAlunos) {
+                    tvContadorSemFicha.text = countSemFicha.toString()
+                } else {
+                    val localCount = AlunosRepository.getQuantidadeSemFicha()
+                    tvContadorSemFicha.text = localCount.toString()
+                }
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        listenerFirestore?.remove()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -76,10 +130,9 @@ class HomeInstrutorActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         atualizarSaudacao()
-        atualizarCountSemFicha()
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavInstrutor)
         if (bottomNav.selectedItemId != R.id.navPainel) {
-             bottomNav.selectedItemId = R.id.navPainel
+            bottomNav.selectedItemId = R.id.navPainel
         }
     }
 
@@ -95,10 +148,5 @@ class HomeInstrutorActivity : AppCompatActivity() {
                 tvSaudacao.text = "Olá, Prof. Yuri!"
             }
         }
-    }
-
-    private fun atualizarCountSemFicha() {
-        val count = AlunosRepository.getQuantidadeSemFicha()
-        findViewById<TextView>(R.id.tvCountSemFicha)?.text = count.toString()
     }
 }

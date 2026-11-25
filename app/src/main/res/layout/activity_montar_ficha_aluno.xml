@@ -33,9 +33,11 @@
             android:layout_marginStart="16dp"
             android:orientation="vertical">
             <TextView
+                android:id="@+id/tvNomeHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Maria Santos"
+                android:text="Carregando..."
+                tools:text="Maria Santos"
                 android:textColor="@color/primary_blue"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -82,16 +84,20 @@
                         android:layout_toEndOf="@id/ivFotoAluno"
                         android:orientation="vertical">
                         <TextView
+                            android:id="@+id/tvNomeAluno"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Maria Santos"
+                            android:text="Carregando..."
+                            tools:text="Maria Santos"
                             android:textColor="@color/dark_navy"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                         <TextView
+                            android:id="@+id/tvStatusFicha"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Aguardando primeira ficha"
+                            android:text="Carregando..."
+                            tools:text="Aguardando primeira ficha"
                             android:textColor="@color/text_gray"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -110,9 +116,11 @@
                         android:textColor="@color/text_gray"
                         android:textSize="14sp" />
                     <TextView
+                        android:id="@+id/tvObjetivoAluno"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Emagrecimento"
+                        android:text="Não informado"
+                        tools:text="Emagrecimento"
                         android:textColor="@color/primary_blue"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -131,9 +139,11 @@
                         android:textColor="@color/text_gray"
                         android:textSize="14sp" />
                     <TextView
+                        android:id="@+id/tvFrequenciaAluno"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4x / semana"
+                        android:text="Não informado"
+                        tools:text="4x / semana"
                         android:textColor="@color/primary_blue"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -146,20 +156,24 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tvTagParq"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_badge_green"
-                        android:text="PAR-Q: Sem restrições"
-                        android:textColor="#16A34A"
+                        android:text="PAR-Q: Carregando..."
+                        tools:text="PAR-Q: Sem restrições"
+                        android:textColor="#27AE60"
                         android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvTagLesao"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_badge_yellow"
-                        android:text="Lesão: Joelho Dir."
+                        android:text="Lesão: Carregando..."
+                        tools:text="Lesão: Joelho Dir."
                         android:textColor="#D97706"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -170,11 +184,97 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:text="Criar Ficha de Treino"
                 android:textColor="@color/primary_blue"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <!-- Bloco 1: Usar treino pronto -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Usar treino pronto"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_card_blue">
+
+                <Spinner
+                    android:id="@+id/spUsarTreinoPronto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="48dp" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_down" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvUsarTreinoProntoHelper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Carregue os exercícios e personalize abaixo."
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+
+            <!-- Bloco 2: Prazo de vencimento (opcional) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Prazo de vencimento (opcional)"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_card_blue">
+
+                <Spinner
+                    android:id="@+id/spPrazoVencimento"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="48dp" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_down" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvPrazoVencimentoHelper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Sem data, a ficha não terá vencimento."
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
 
             <!-- Sub abas de treino -->
             <LinearLayout
@@ -185,6 +285,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tvTabA"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -196,6 +297,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvTabB"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -206,6 +308,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvTabC"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -225,19 +328,29 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_button_outline"
-                android:backgroundTint="#F1F5F9"
-                android:drawableEnd="@android:drawable/arrow_down_float"
-                android:paddingHorizontal="16dp"
-                android:text="Supino Reto"
-                android:textColor="@color/dark_navy"
-                android:textSize="16sp"
-                android:focusable="false"
-                android:clickable="true" />
+                android:background="@drawable/bg_card_blue">
+
+                <Spinner
+                    android:id="@+id/spSelecionarExercicio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="48dp" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_down" />
+            </RelativeLayout>
 
             <!-- Grade Séries / Reps / Carga -->
             <LinearLayout
@@ -260,6 +373,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etSeries"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -287,6 +401,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etReps"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -314,6 +429,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold" />
                     <EditText
+                        android:id="@+id/etCarga"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_marginTop="4dp"
@@ -327,6 +443,7 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btnAdicionarExercicio"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
@@ -338,114 +455,16 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Lista Exercicios Cadastrados (Mock) -->
+            <!-- Lista Exercicios Cadastrados -->
             <LinearLayout
+                android:id="@+id/llContainerExercicios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:orientation="vertical">
-
-                <!-- Exercicio 1 -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/bg_button_outline"
-                    android:backgroundTint="#F9FAFB"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Supino Reto"
-                            android:textColor="@color/dark_navy"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="4×12 — 60kg"
-                            android:textColor="@color/text_gray"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/ic_menu_edit"
-                            app:tint="@color/text_gray" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:src="@android:drawable/ic_menu_delete"
-                            app:tint="#EF4444" />
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <!-- Exercicio 2 -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_button_outline"
-                    android:backgroundTint="#F9FAFB"
-                    android:padding="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Crucifixo"
-                            android:textColor="@color/dark_navy"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3×15 — 12kg"
-                            android:textColor="@color/text_gray"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/ic_menu_edit"
-                            app:tint="@color/text_gray" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:src="@android:drawable/ic_menu_delete"
-                            app:tint="#EF4444" />
-                    </LinearLayout>
-                </RelativeLayout>
-            </LinearLayout>
+                android:orientation="vertical" />
 
             <Button
+                android:id="@+id/btnSalvarFicha"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="32dp"

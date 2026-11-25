@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F8FAFC"
@@ -17,20 +18,38 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Header -->
+            <!-- Header com Botão Voltar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-                <TextView
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/btnVoltarTriagem"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_pill_blue_solid"
+                    android:padding="8dp"
+                    android:src="@android:drawable/ic_menu_revert"
+                    app:tint="#FFFFFF" />
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="FLUXO DE TRIAGEM"
-                    android:textColor="#2558F5"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FLUXO DE TRIAGEM"
+                        android:textColor="#2558F5"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -91,7 +110,8 @@
                     <Switch
                         android:id="@+id/swQ1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvAlertQ1"
@@ -99,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="12dp"
-                    android:text="⚠️ Descreva brevemente para o instrutor!"
+                    android:text="⚠️ Alerta de restrição registrado para a equipe médica."
                     android:textColor="#D97706"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -123,7 +143,8 @@
                     <Switch
                         android:id="@+id/swQ2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvAlertQ2"
@@ -131,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="12dp"
-                    android:text="⚠️ Descreva brevemente para o instrutor!"
+                    android:text="⚠️ Alerta de restrição registrado para a equipe médica."
                     android:textColor="#D97706"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -155,7 +176,8 @@
                     <Switch
                         android:id="@+id/swQ3"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvAlertQ3"
@@ -163,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="12dp"
-                    android:text="⚠️ Descreva brevemente para o instrutor!"
+                    android:text="⚠️ Alerta de restrição registrado para a equipe médica."
                     android:textColor="#D97706"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -187,7 +209,8 @@
                     <Switch
                         android:id="@+id/swQ4"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvAlertQ4"
@@ -195,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="12dp"
-                    android:text="⚠️ Descreva brevemente para o instrutor!"
+                    android:text="⚠️ Alerta de restrição registrado para a equipe médica."
                     android:textColor="#D97706"
                     android:textSize="12sp"
                     android:visibility="gone" />
@@ -219,7 +242,8 @@
                     <Switch
                         android:id="@+id/swQ5"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
                 </LinearLayout>
                 <TextView
                     android:id="@+id/tvAlertQ5"
@@ -227,7 +251,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="12dp"
-                    android:text="⚠️ Descreva brevemente para o instrutor!"
+                    android:text="⚠️ Alerta de restrição registrado para a equipe médica."
                     android:textColor="#D97706"
                     android:textSize="12sp"
                     android:visibility="gone" />

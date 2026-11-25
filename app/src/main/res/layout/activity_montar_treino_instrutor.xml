@@ -187,6 +187,35 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Prazo de vencimento (opcional) -->
+            <TextView
+                android:id="@+id/tvPrazoVencimentoLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Prazo de vencimento (opcional)"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spPrazoVencimento"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_button_outline"
+                android:backgroundTint="#F1F5F9"
+                android:paddingHorizontal="16dp" />
+
+            <TextView
+                android:id="@+id/tvPrazoVencimentoHelper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Sem data, a ficha não terá vencimento."
+                android:textColor="@color/text_gray"
+                android:textSize="12sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

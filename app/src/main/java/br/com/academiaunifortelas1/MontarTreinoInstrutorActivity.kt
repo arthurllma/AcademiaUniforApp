@@ -4,14 +4,18 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MontarTreinoInstrutorActivity : AppCompatActivity() {
 
@@ -50,6 +54,7 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
 
     private lateinit var tvHeaderTitulo: TextView
     private lateinit var etNomeTreino: EditText
+    private lateinit var spPrazoVencimento: Spinner
     private lateinit var tvTabA: TextView
     private lateinit var tvTabB: TextView
     private lateinit var tvTabC: TextView
@@ -70,6 +75,7 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
 
         tvHeaderTitulo = findViewById(R.id.tvHeaderTitulo)
         etNomeTreino = findViewById(R.id.etNomeTreino)
+        spPrazoVencimento = findViewById(R.id.spPrazoVencimento)
         tvTabA = findViewById(R.id.tvTabA)
         tvTabB = findViewById(R.id.tvTabB)
         tvTabC = findViewById(R.id.tvTabC)
@@ -82,6 +88,18 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         etReps = findViewById(R.id.etReps)
         etCarga = findViewById(R.id.etCarga)
         etDescanso = findViewById(R.id.etDescanso)
+
+        // Configurar as opções do seletor de prazo de vencimento
+        val prazoOptions = arrayOf(
+            "Sem vencimento (padrão)",
+            "1 mês (30 dias)",
+            "2 meses (60 dias)",
+            "3 meses (90 dias)",
+            "6 meses (180 dias)"
+        )
+        val adapterPrazo = ArrayAdapter(this, R.layout.spinner_item, prazoOptions)
+        adapterPrazo.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        spPrazoVencimento.adapter = adapterPrazo
 
         val treinoTipo = intent.getStringExtra("treino_tipo")
         val treinoNome = intent.getStringExtra("treino_nome")
@@ -117,11 +135,44 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnSalvarTreino)?.setOnClickListener {
-            Toast.makeText(this, "Treino salvo na biblioteca com sucesso!", Toast.LENGTH_SHORT).show()
-            finish()
+            val nome = etNomeTreino.text.toString().trim()
+            val objetivo = findViewById<EditText>(R.id.etObjetivoTreino)?.text?.toString()?.trim() ?: ""
+            val nivel = findViewById<EditText>(R.id.etNivelTreino)?.text?.toString()?.trim() ?: ""
+            val prazoValidadeDias = getPrazoValidadeDiasSelecionado()
+
+            val treinoMap = hashMapOf(
+                "nome" to nome,
+                "objetivo" to objetivo,
+                "nivel" to nivel,
+                "prazoValidadeDias" to prazoValidadeDias,
+                "exerciciosA" to exerciciosA.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
+                "exerciciosB" to exerciciosB.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
+                "exerciciosC" to exerciciosC.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
+                "criadoEm" to Timestamp.now()
+            )
+
+            FirebaseFirestore.getInstance().collection("biblioteca_treinos")
+                .add(treinoMap)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Treino salvo na biblioteca com sucesso!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Erro ao salvar treino: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
         }
 
         selecionarAba(abaAtual)
+    }
+
+    private fun getPrazoValidadeDiasSelecionado(): Int? {
+        return when (spPrazoVencimento.selectedItemPosition) {
+            1 -> 30
+            2 -> 60
+            3 -> 90
+            4 -> 180
+            else -> null
+        }
     }
 
     private fun getListaAtiva(): MutableList<ExercicioEditavel> {

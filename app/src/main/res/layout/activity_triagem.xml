@@ -78,13 +78,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/bg_chip_selected"
+                    android:background="@drawable/bg_chip_unselected"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="10dp"
                     android:text="Nunca treinei (iniciante)"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/chipExp2"
@@ -132,13 +131,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
-                    android:background="@drawable/bg_chip_selected"
+                    android:background="@drawable/bg_chip_unselected"
                     android:gravity="center"
                     android:paddingVertical="10dp"
                     android:text="Hipertrofia"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:textColor="#0F172A"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/chipObj2"
@@ -233,7 +231,7 @@
 
                 <TextView android:id="@+id/freq1" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="1x" android:textColor="#0F172A" android:textStyle="bold"/>
                 <TextView android:id="@+id/freq2" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="2x" android:textColor="#0F172A" android:textStyle="bold"/>
-                <TextView android:id="@+id/freq3" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_selected" android:gravity="center" android:text="3x" android:textColor="#FFFFFF" android:textStyle="bold"/>
+                <TextView android:id="@+id/freq3" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="3x" android:textColor="#0F172A" android:textStyle="bold"/>
                 <TextView android:id="@+id/freq4" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="4x" android:textColor="#0F172A" android:textStyle="bold"/>
                 <TextView android:id="@+id/freq5" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="5x" android:textColor="#0F172A" android:textStyle="bold"/>
                 <TextView android:id="@+id/freq6" android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="@drawable/bg_chip_unselected" android:gravity="center" android:text="6x" android:textColor="#0F172A" android:textStyle="bold"/>

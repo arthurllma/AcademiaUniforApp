@@ -13,12 +13,15 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import br.com.academiaunifortelas1.model.AlunoModel
 import br.com.academiaunifortelas1.repository.AlunosRepository
+import br.com.academiaunifortelas1.repository.FichaTreinoRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class AlunosInstrutorActivity : AppCompatActivity() {
-
-    private val listaAlunos get() = AlunosRepository.listaAlunos
 
     private lateinit var tvChipTodos: TextView
     private lateinit var tvChipComFicha: TextView
@@ -27,6 +30,8 @@ class AlunosInstrutorActivity : AppCompatActivity() {
     private lateinit var llContainerAlunos: LinearLayout
 
     private var filtroAtual = "todos" // "todos", "com_ficha", "sem_ficha"
+    private var listenerFirestore: ListenerRegistration? = null
+    private val listaAlunosFirestore = mutableListOf<AlunoModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +96,61 @@ class AlunosInstrutorActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        carregarAlunosFirestore()
         selecionarFiltro(filtroAtual)
+    }
+
+    private fun carregarAlunosFirestore() {
+        val db = FirebaseFirestore.getInstance()
+        listenerFirestore = db.collection("usuarios")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) {
+                    // Se falhar o Firestore, mantemos os alunos locais como fallback
+                    if (listaAlunosFirestore.isEmpty()) {
+                        listaAlunosFirestore.clear()
+                        listaAlunosFirestore.addAll(AlunosRepository.listaAlunos)
+                        renderizarLista(etBuscarAluno.text.toString())
+                    }
+                    return@addSnapshotListener
+                }
+
+                val listaAtualizada = mutableListOf<AlunoModel>()
+                for (doc in snapshot.documents) {
+                    val tipo = doc.getString("tipo") ?: "aluno"
+                    // Filtra apenas alunos (ou usuários sem tipo definido explicitamente)
+                    if (tipo.equals("aluno", ignoreCase = true)) {
+                        val id = doc.id
+                        val nome = doc.getString("nome") ?: "Aluno"
+                        val cpf = doc.getString("cpf") ?: ""
+                        val cpfFormatado = if (cpf.isNotEmpty()) "CPF: $cpf" else "Sem CPF"
+
+                        val dataVencimento = doc.getTimestamp("dataVencimento")
+                        val hasFicha = doc.get("hasFicha") as? Boolean ?: (doc.getString("statusFicha") != null && doc.getString("statusFicha") != "Aguardando Ficha")
+
+                        val statusFichaCalculado = doc.getString("statusFicha")
+                            ?: FichaTreinoRepository.calcularStatusFicha(hasFicha, dataVencimento)
+
+                        listaAtualizada.add(AlunoModel(id, nome, cpfFormatado, statusFichaCalculado))
+                    }
+                }
+
+                // Se houver alunos no Firestore, atualiza a lista dinamicamente
+                if (listaAtualizada.isNotEmpty()) {
+                    listaAlunosFirestore.clear()
+                    listaAlunosFirestore.addAll(listaAtualizada)
+                } else {
+                    // Fallback para demonstrar a lista
+                    listaAlunosFirestore.clear()
+                    listaAlunosFirestore.addAll(AlunosRepository.listaAlunos)
+                }
+
+                renderizarLista(etBuscarAluno.text.toString())
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        listenerFirestore?.remove()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -125,7 +184,9 @@ class AlunosInstrutorActivity : AppCompatActivity() {
         llContainerAlunos.removeAllViews()
         val density = resources.displayMetrics.density
 
-        val listaFiltrada = listaAlunos.filter { aluno ->
+        val listaBase = if (listaAlunosFirestore.isNotEmpty()) listaAlunosFirestore else AlunosRepository.listaAlunos
+
+        val listaFiltrada = listaBase.filter { aluno ->
             val atendeBusca = aluno.nome.contains(busca, ignoreCase = true) || aluno.cpf.contains(busca, ignoreCase = true)
             val atendeFiltro = when (filtroAtual) {
                 "com_ficha" -> aluno.statusFicha == "Ficha Ativa"
@@ -242,7 +303,10 @@ class AlunosInstrutorActivity : AppCompatActivity() {
             card.addView(rightLayout)
 
             card.setOnClickListener {
-                startActivity(Intent(this, MontarFichaAlunoActivity::class.java))
+                val intent = Intent(this, MontarFichaAlunoActivity::class.java)
+                intent.putExtra("ALUNO_ID", aluno.id)
+                intent.putExtra("aluno_id", aluno.id)
+                startActivity(intent)
             }
 
             llContainerAlunos.addView(card)

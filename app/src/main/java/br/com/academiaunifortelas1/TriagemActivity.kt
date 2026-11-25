@@ -7,17 +7,29 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import br.com.academiaunifortelas1.repository.TriagemDataManager
+import com.google.firebase.auth.FirebaseAuth
 
 class TriagemActivity : AppCompatActivity() {
+
+    private var selectedExp: TextView? = null
+    private var selectedObj: TextView? = null
+    private var selectedFreq: TextView? = null
+    private var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_triagem)
 
-        // Experiência Chips
+        userId = intent.getStringExtra("USER_UID")
+            ?: intent.getStringExtra("user_id")
+            ?: FirebaseAuth.getInstance().currentUser?.uid
+            ?: getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_id", "") ?: ""
+
         val chipExp1 = findViewById<TextView>(R.id.chipExp1)
         val chipExp2 = findViewById<TextView>(R.id.chipExp2)
         val chipExp3 = findViewById<TextView>(R.id.chipExp3)
@@ -25,13 +37,16 @@ class TriagemActivity : AppCompatActivity() {
 
         expList.forEach { chip ->
             chip.setOnClickListener {
-                expList.forEach { it.setBackgroundResource(R.drawable.bg_chip_unselected); it.setTextColor(Color.parseColor("#0F172A")) }
+                expList.forEach {
+                    it.setBackgroundResource(R.drawable.bg_chip_unselected)
+                    it.setTextColor(Color.parseColor("#0F172A"))
+                }
                 chip.setBackgroundResource(R.drawable.bg_chip_selected)
                 chip.setTextColor(Color.WHITE)
+                selectedExp = chip
             }
         }
 
-        // Objetivo Chips
         val chipObj1 = findViewById<TextView>(R.id.chipObj1)
         val chipObj2 = findViewById<TextView>(R.id.chipObj2)
         val chipObj3 = findViewById<TextView>(R.id.chipObj3)
@@ -43,9 +58,13 @@ class TriagemActivity : AppCompatActivity() {
 
         objList.forEach { chip ->
             chip.setOnClickListener {
-                objList.forEach { it.setBackgroundResource(R.drawable.bg_chip_unselected); it.setTextColor(Color.parseColor("#0F172A")) }
+                objList.forEach {
+                    it.setBackgroundResource(R.drawable.bg_chip_unselected)
+                    it.setTextColor(Color.parseColor("#0F172A"))
+                }
                 chip.setBackgroundResource(R.drawable.bg_chip_selected)
                 chip.setTextColor(Color.WHITE)
+                selectedObj = chip
 
                 if (chip == chipObj6) {
                     etOutro.visibility = View.VISIBLE
@@ -55,7 +74,6 @@ class TriagemActivity : AppCompatActivity() {
             }
         }
 
-        // Frequência Chips
         val freqList = listOf(
             findViewById<TextView>(R.id.freq1),
             findViewById<TextView>(R.id.freq2),
@@ -68,15 +86,52 @@ class TriagemActivity : AppCompatActivity() {
 
         freqList.forEach { freq ->
             freq.setOnClickListener {
-                freqList.forEach { it.setBackgroundResource(R.drawable.bg_chip_unselected); it.setTextColor(Color.parseColor("#0F172A")) }
+                freqList.forEach {
+                    it.setBackgroundResource(R.drawable.bg_chip_unselected)
+                    it.setTextColor(Color.parseColor("#0F172A"))
+                }
                 freq.setBackgroundResource(R.drawable.bg_chip_selected)
                 freq.setTextColor(Color.WHITE)
+                selectedFreq = freq
             }
         }
 
-        // Prosseguir
         findViewById<Button>(R.id.btnProsseguirTriagem1)?.setOnClickListener {
-            startActivity(Intent(this, TriagemEtapa2Activity::class.java))
+            val exp = selectedExp?.text?.toString() ?: ""
+            if (exp.isEmpty()) {
+                Toast.makeText(this, "Selecione seu nível de experiência.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            var obj = selectedObj?.text?.toString() ?: ""
+            if (obj.isEmpty()) {
+                Toast.makeText(this, "Selecione seu objetivo principal.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (selectedObj == chipObj6) {
+                val outroTexto = etOutro.text.toString().trim()
+                if (outroTexto.isEmpty()) {
+                    Toast.makeText(this, "Digite seu objetivo no campo informado.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                obj = outroTexto
+            }
+
+            val freqRaw = selectedFreq?.text?.toString() ?: ""
+            if (freqRaw.isEmpty()) {
+                Toast.makeText(this, "Selecione a frequência semanal ideal.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val freqFormatted = if (freqRaw.endsWith("/ semana", ignoreCase = true)) freqRaw else "$freqRaw / semana"
+
+            TriagemDataManager.experiencia = exp
+            TriagemDataManager.objetivo = obj
+            TriagemDataManager.frequencia = freqFormatted
+
+            val nextIntent = Intent(this, TriagemEtapa2Activity::class.java)
+            nextIntent.putExtra("USER_UID", userId)
+            nextIntent.putExtra("user_id", userId)
+            startActivity(nextIntent)
         }
     }
 }
