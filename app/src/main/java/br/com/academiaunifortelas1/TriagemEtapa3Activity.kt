@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Switch
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -14,16 +15,28 @@ import com.google.firebase.auth.FirebaseAuth
 class TriagemEtapa3Activity : AppCompatActivity() {
 
     private var userId: String = ""
+    private var isModoEdicao: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_triagem_etapa3)
 
+        isModoEdicao = intent.getBooleanExtra("MODO_EDICAO", false)
+
         userId = intent.getStringExtra("USER_UID")
             ?: intent.getStringExtra("user_id")
             ?: FirebaseAuth.getInstance().currentUser?.uid
             ?: getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_id", "") ?: ""
+
+        if (isModoEdicao) {
+            findViewById<TextView>(R.id.tvHeaderTitulo)?.text = "EDITAR ANAMNESE"
+            findViewById<TextView>(R.id.tvHeaderEtapa)?.text = "Etapa 3 de 4"
+            findViewById<ProgressBar>(R.id.pbTriagem)?.apply {
+                max = 4
+                progress = 3
+            }
+        }
 
         val btnVoltar = findViewById<View>(R.id.btnVoltarTriagem)
         btnVoltar?.setOnClickListener { finish() }
@@ -52,6 +65,14 @@ class TriagemEtapa3Activity : AppCompatActivity() {
         bindSwitch(swQ4, tvAlertQ4)
         bindSwitch(swQ5, tvAlertQ5)
 
+        if (isModoEdicao) {
+            swQ1.isChecked = TriagemDataManager.swQ1
+            swQ2.isChecked = TriagemDataManager.swQ2
+            swQ3.isChecked = TriagemDataManager.swQ3
+            swQ4.isChecked = TriagemDataManager.swQ4
+            swQ5.isChecked = TriagemDataManager.swQ5
+        }
+
         findViewById<Button>(R.id.btnProsseguirTriagem3)?.setOnClickListener {
             val listAlerts = mutableListOf<String>()
             if (swQ1.isChecked) listAlerts.add("Problema cardíaco")
@@ -74,6 +95,7 @@ class TriagemEtapa3Activity : AppCompatActivity() {
             val nextIntent = Intent(this, TriagemEtapa4Activity::class.java)
             nextIntent.putExtra("USER_UID", userId)
             nextIntent.putExtra("user_id", userId)
+            nextIntent.putExtra("MODO_EDICAO", isModoEdicao)
             startActivity(nextIntent)
         }
     }

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -20,16 +21,28 @@ class TriagemEtapa2Activity : AppCompatActivity() {
     private var peso: Double = 70.0
     private var altura: Double = 175.0
     private var userId: String = ""
+    private var isModoEdicao: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_triagem_etapa2)
 
+        isModoEdicao = intent.getBooleanExtra("MODO_EDICAO", false)
+
         userId = intent.getStringExtra("USER_UID")
             ?: intent.getStringExtra("user_id")
             ?: FirebaseAuth.getInstance().currentUser?.uid
             ?: getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_id", "") ?: ""
+
+        if (isModoEdicao) {
+            findViewById<TextView>(R.id.tvHeaderTitulo)?.text = "EDITAR ANAMNESE"
+            findViewById<TextView>(R.id.tvHeaderEtapa)?.text = "Etapa 2 de 4"
+            findViewById<ProgressBar>(R.id.pbTriagem)?.apply {
+                max = 4
+                progress = 2
+            }
+        }
 
         val btnVoltar = findViewById<View>(R.id.btnVoltarTriagem)
         btnVoltar?.setOnClickListener { finish() }
@@ -90,6 +103,32 @@ class TriagemEtapa2Activity : AppCompatActivity() {
             }
         }
 
+        if (isModoEdicao) {
+            if (TriagemDataManager.presencialBiometria || TriagemDataManager.peso.equals("Presencial", ignoreCase = true)) {
+                cbPresencial.isChecked = true
+            } else {
+                if (TriagemDataManager.peso.isNotEmpty() && TriagemDataManager.peso != "0.0") {
+                    val pVal = TriagemDataManager.peso.toDoubleOrNull()
+                    if (pVal != null && pVal > 0) {
+                        peso = pVal
+                        etPeso.setText(if (pVal % 1.0 == 0.0) pVal.toInt().toString() else pVal.toString())
+                    } else {
+                        etPeso.setText(TriagemDataManager.peso)
+                    }
+                }
+                if (TriagemDataManager.altura.isNotEmpty() && TriagemDataManager.altura != "0.0") {
+                    val aVal = TriagemDataManager.altura.toDoubleOrNull()
+                    if (aVal != null && aVal > 0) {
+                        altura = aVal
+                        etAltura.setText(if (aVal % 1.0 == 0.0) aVal.toInt().toString() else aVal.toString())
+                    } else {
+                        etAltura.setText(TriagemDataManager.altura)
+                    }
+                }
+                updateImc()
+            }
+        }
+
         findViewById<Button>(R.id.btnPesoMinus)?.setOnClickListener {
             val currentP = etPeso.text.toString().toDoubleOrNull() ?: peso
             peso = (currentP - 0.5).coerceAtLeast(30.0)
@@ -142,6 +181,7 @@ class TriagemEtapa2Activity : AppCompatActivity() {
             val nextIntent = Intent(this, TriagemEtapa3Activity::class.java)
             nextIntent.putExtra("USER_UID", userId)
             nextIntent.putExtra("user_id", userId)
+            nextIntent.putExtra("MODO_EDICAO", isModoEdicao)
             startActivity(nextIntent)
         }
     }

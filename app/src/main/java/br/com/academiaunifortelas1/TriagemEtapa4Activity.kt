@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import br.com.academiaunifortelas1.repository.TriagemDataManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class TriagemEtapa4Activity : AppCompatActivity() {
 
@@ -24,16 +27,31 @@ class TriagemEtapa4Activity : AppCompatActivity() {
     private var isOutrosEsportesSelected = false
 
     private var userId: String = ""
+    private var isModoEdicao: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_triagem_etapa4)
 
+        isModoEdicao = intent.getBooleanExtra("MODO_EDICAO", false)
+
         userId = intent.getStringExtra("USER_UID")
             ?: intent.getStringExtra("user_id")
             ?: FirebaseAuth.getInstance().currentUser?.uid
             ?: getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_id", "") ?: ""
+
+        val btnProsseguir = findViewById<Button>(R.id.btnProsseguirTriagem4)
+
+        if (isModoEdicao) {
+            findViewById<TextView>(R.id.tvHeaderTitulo)?.text = "EDITAR ANAMNESE"
+            findViewById<TextView>(R.id.tvHeaderEtapa)?.text = "Etapa 4 de 4"
+            findViewById<ProgressBar>(R.id.pbTriagem)?.apply {
+                max = 4
+                progress = 4
+            }
+            btnProsseguir?.text = "Salvar Anamnese"
+        }
 
         val btnVoltar = findViewById<View>(R.id.btnVoltarTriagem)
         btnVoltar?.setOnClickListener { finish() }
@@ -141,7 +159,65 @@ class TriagemEtapa4Activity : AppCompatActivity() {
 
         val etObservacoes = findViewById<EditText>(R.id.etObservacoes)
 
-        findViewById<Button>(R.id.btnProsseguirTriagem4)?.setOnClickListener {
+        if (isModoEdicao) {
+            val lesoesStr = TriagemDataManager.lesoes
+            if (lesoesStr.equals("Sem lesões", ignoreCase = true) || lesoesStr.equals("Nenhuma", ignoreCase = true) || lesoesStr.equals("Nenhuma Lesão", ignoreCase = true)) {
+                isNenhumaLesaoSelected = true
+                updateChipVisual(chipLesaoNenhuma, true)
+            } else if (lesoesStr.isNotEmpty()) {
+                val partes = lesoesStr.split(",").map { it.trim() }
+                val outrasTextos = mutableListOf<String>()
+
+                partes.forEach { parte ->
+                    val matchedChip = lesoesList.firstOrNull { it.text.toString().equals(parte, ignoreCase = true) }
+                    if (matchedChip != null) {
+                        selectedLesoes.add(matchedChip)
+                        updateChipVisual(matchedChip, true)
+                    } else if (parte.isNotBlank()) {
+                        outrasTextos.add(parte)
+                    }
+                }
+
+                if (outrasTextos.isNotEmpty()) {
+                    isOutrasLesoesSelected = true
+                    updateChipVisual(chipLesaoOutras, true)
+                    etOutrasLesoes.visibility = View.VISIBLE
+                    etOutrasLesoes.setText(outrasTextos.joinToString(", "))
+                }
+            }
+
+            val esportesStr = TriagemDataManager.esportes
+            if (esportesStr.equals("Nenhum", ignoreCase = true) || esportesStr.equals("Nenhum esporte", ignoreCase = true)) {
+                isNenhumEsporteSelected = true
+                updateChipVisual(chipEsporteNenhum, true)
+            } else if (esportesStr.isNotEmpty()) {
+                val partes = esportesStr.split(",").map { it.trim() }
+                val outrosTextos = mutableListOf<String>()
+
+                partes.forEach { parte ->
+                    val matchedChip = esportesList.firstOrNull { it.text.toString().equals(parte, ignoreCase = true) }
+                    if (matchedChip != null) {
+                        selectedEsportes.add(matchedChip)
+                        updateChipVisual(matchedChip, true)
+                    } else if (parte.isNotBlank()) {
+                        outrosTextos.add(parte)
+                    }
+                }
+
+                if (outrosTextos.isNotEmpty()) {
+                    isOutrosEsportesSelected = true
+                    updateChipVisual(chipEsporteOutros, true)
+                    etOutrosEsportes.visibility = View.VISIBLE
+                    etOutrosEsportes.setText(outrosTextos.joinToString(", "))
+                }
+            }
+
+            if (TriagemDataManager.observacoes.isNotEmpty()) {
+                etObservacoes.setText(TriagemDataManager.observacoes)
+            }
+        }
+
+        btnProsseguir?.setOnClickListener {
             val temLesaoEspecifica = selectedLesoes.isNotEmpty() || isOutrasLesoesSelected
             if (!isNenhumaLesaoSelected && !temLesaoEspecifica) {
                 Toast.makeText(this, "Selecione ao menos uma opção de lesão (ou 'Nenhuma Lesão').", Toast.LENGTH_SHORT).show()
@@ -194,10 +270,76 @@ class TriagemEtapa4Activity : AppCompatActivity() {
             TriagemDataManager.esportes = esportesFormatados
             TriagemDataManager.observacoes = etObservacoes.text.toString().trim()
 
-            val nextIntent = Intent(this, TriagemEtapa5Activity::class.java)
-            nextIntent.putExtra("USER_UID", userId)
-            nextIntent.putExtra("user_id", userId)
-            startActivity(nextIntent)
+            if (isModoEdicao) {
+                val db = FirebaseFirestore.getInstance()
+
+                val pesoDouble = TriagemDataManager.peso.toDoubleOrNull() ?: 0.0
+                val alturaDouble = TriagemDataManager.altura.toDoubleOrNull() ?: 0.0
+                val imcDouble = TriagemDataManager.imc.replace(",", ".").toDoubleOrNull() ?: 0.0
+
+                val triagemMap = hashMapOf<String, Any>(
+                    "experiencia" to TriagemDataManager.experiencia,
+                    "objetivo" to TriagemDataManager.objetivo,
+                    "frequencia" to TriagemDataManager.frequencia,
+                    "peso" to pesoDouble,
+                    "altura" to alturaDouble,
+                    "imc" to imcDouble,
+                    "statusParq" to TriagemDataManager.statusParq,
+                    "lesoes" to TriagemDataManager.lesoes
+                )
+
+                val updates = hashMapOf<String, Any>(
+                    "objetivo" to TriagemDataManager.objetivo,
+                    "frequencia" to TriagemDataManager.frequencia,
+                    "frequenciaIdeal" to TriagemDataManager.frequencia,
+                    "experiencia" to TriagemDataManager.experiencia,
+                    "peso" to TriagemDataManager.peso,
+                    "altura" to TriagemDataManager.altura,
+                    "statusParq" to TriagemDataManager.statusParq,
+                    "parqStatus" to TriagemDataManager.statusParq,
+                    "parqRestricoes" to TriagemDataManager.parqRestricoes,
+                    "lesoes" to TriagemDataManager.lesoes,
+                    "lesao" to TriagemDataManager.lesoes,
+                    "esportes" to TriagemDataManager.esportes,
+                    "observacoes" to TriagemDataManager.observacoes,
+                    "triagem" to triagemMap
+                )
+
+                getSharedPreferences("TriagemDados", MODE_PRIVATE).edit()
+                    .putString("experiencia", TriagemDataManager.experiencia)
+                    .putString("objetivo", TriagemDataManager.objetivo)
+                    .putString("frequencia", TriagemDataManager.frequencia)
+                    .putString("peso", TriagemDataManager.peso)
+                    .putString("altura", TriagemDataManager.altura)
+                    .putString("imc", TriagemDataManager.imc)
+                    .putString("statusParq", TriagemDataManager.statusParq)
+                    .putBoolean("parqRestricoes", TriagemDataManager.parqRestricoes)
+                    .putString("lesoes", TriagemDataManager.lesoes)
+                    .putString("esportes", TriagemDataManager.esportes)
+                    .putString("observacoes", TriagemDataManager.observacoes)
+                    .apply()
+
+                btnProsseguir.isEnabled = false
+
+                db.collection("usuarios").document(userId)
+                    .set(updates, SetOptions.merge())
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Anamnese atualizada com sucesso!", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this, PerfilBiometriaActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        btnProsseguir.isEnabled = true
+                        Toast.makeText(this, "Erro ao atualizar anamnese: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+            } else {
+                val nextIntent = Intent(this, TriagemEtapa5Activity::class.java)
+                nextIntent.putExtra("USER_UID", userId)
+                nextIntent.putExtra("user_id", userId)
+                startActivity(nextIntent)
+            }
         }
     }
 }
