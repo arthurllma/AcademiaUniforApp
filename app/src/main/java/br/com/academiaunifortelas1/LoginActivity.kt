@@ -106,75 +106,95 @@ class LoginActivity : AppCompatActivity() {
 
                                 if (document != null && document.exists()) {
                                     val tipo = document.getString("tipo")?.trim()?.lowercase() ?: "aluno"
-                                    val isTriagemConcluida = document.getBoolean("isTriagemConcluida")
-                                        ?: document.getBoolean("triagemConcluida")
-                                        ?: false
-
-                                    // 1. Se aluno e triagem não foi concluída -> redirecionar para TriagemActivity
-                                    if (tipo == "aluno" && !isTriagemConcluida) {
-                                        val intent = Intent(this, TriagemActivity::class.java)
-                                        intent.putExtra("USER_UID", userId)
-                                        intent.putExtra("user_id", userId)
-                                        startActivity(intent)
-                                        finish()
-                                        return@addOnSuccessListener
-                                    }
-
                                     val status = document.getString("status")?.trim()?.lowercase() ?: "aprovado"
 
-                                    // 2. Se status == "pendente" -> bloquear
-                                    if (status == "pendente") {
-                                        auth.signOut()
-                                        val msg = "Seu cadastro ainda está aguardando aprovação do Administrador."
-                                        tvErrorSenha?.text = msg
-                                        tvErrorSenha?.visibility = View.VISIBLE
-                                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-                                        return@addOnSuccessListener
-                                    }
+                                    if (tipo == "instrutor" || tipo == "adm") {
+                                        // Nunca verifica isTriagemConcluida nem envia para Triagem
+                                        if (status == "pendente") {
+                                            auth.signOut()
+                                            val msg = "Seu cadastro ainda está aguardando aprovação do Administrador."
+                                            tvErrorSenha?.text = msg
+                                            tvErrorSenha?.visibility = View.VISIBLE
+                                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                                            return@addOnSuccessListener
+                                        }
 
-                                    // 3. Se status == "rejeitado" -> bloquear
-                                    if (status == "rejeitado") {
-                                        auth.signOut()
-                                        val msg = "Seu cadastro foi rejeitado pela administração."
-                                        tvErrorSenha?.text = msg
-                                        tvErrorSenha?.visibility = View.VISIBLE
-                                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-                                        return@addOnSuccessListener
-                                    }
+                                        if (status == "rejeitado") {
+                                            auth.signOut()
+                                            val msg = "Seu cadastro foi rejeitado pela administração."
+                                            tvErrorSenha?.text = msg
+                                            tvErrorSenha?.visibility = View.VISIBLE
+                                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                                            return@addOnSuccessListener
+                                        }
 
-                                    // 4. Se status == "aprovado" -> autorizar login
-                                    val nomeCompleto = document.getString("nome") ?: ""
-                                    val emailUser = document.getString("email") ?: email
-                                    val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
-                                    val userRole = if (tipo == "adm") "admin" else if (tipo == "instrutor") "instrutor" else "aluno"
+                                        // Status "aprovado"
+                                        val nomeCompleto = document.getString("nome") ?: ""
+                                        val emailUser = document.getString("email") ?: email
+                                        val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
+                                        val userRole = if (tipo == "adm") "admin" else "instrutor"
 
-                                    getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
-                                        .putString("user_id", userId)
-                                        .putString("user_role", userRole)
-                                        .putString("nome_completo", nomeCompleto)
-                                        .putString("primeiro_nome", primeiroNome)
-                                        .putString("email", emailUser)
-                                        .apply()
+                                        getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
+                                            .putString("user_id", userId)
+                                            .putString("user_role", userRole)
+                                            .putString("nome_completo", nomeCompleto)
+                                            .putString("primeiro_nome", primeiroNome)
+                                            .putString("email", emailUser)
+                                            .apply()
 
-                                    Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                        val intent = Intent(this, HomeInstrutorActivity::class.java)
+                                        intent.putExtra("IS_ADMIN", (tipo == "adm"))
+                                        startActivity(intent)
+                                        finish()
+                                    } else {
+                                        // Exige fluxo completo de Aluno: triagem concluída + status aprovado
+                                        val isTriagemConcluida = document.getBoolean("isTriagemConcluida")
+                                            ?: document.getBoolean("triagemConcluida")
+                                            ?: false
 
-                                    when (tipo) {
-                                        "adm" -> {
-                                            val intent = Intent(this, HomeInstrutorActivity::class.java)
-                                            intent.putExtra("IS_ADMIN", true)
+                                        if (!isTriagemConcluida) {
+                                            val intent = Intent(this, TriagemActivity::class.java)
+                                            intent.putExtra("USER_UID", userId)
+                                            intent.putExtra("user_id", userId)
                                             startActivity(intent)
                                             finish()
+                                            return@addOnSuccessListener
                                         }
-                                        "instrutor" -> {
-                                            val intent = Intent(this, HomeInstrutorActivity::class.java)
-                                            intent.putExtra("IS_ADMIN", false)
-                                            startActivity(intent)
-                                            finish()
+
+                                        if (status == "pendente") {
+                                            auth.signOut()
+                                            val msg = "Seu cadastro ainda está aguardando aprovação do Administrador."
+                                            tvErrorSenha?.text = msg
+                                            tvErrorSenha?.visibility = View.VISIBLE
+                                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                                            return@addOnSuccessListener
                                         }
-                                        else -> {
-                                            startActivity(Intent(this, HomeAlunoActivity::class.java))
-                                            finish()
+
+                                        if (status == "rejeitado") {
+                                            auth.signOut()
+                                            val msg = "Seu cadastro foi rejeitado pela administração."
+                                            tvErrorSenha?.text = msg
+                                            tvErrorSenha?.visibility = View.VISIBLE
+                                            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                                            return@addOnSuccessListener
                                         }
+
+                                        val nomeCompleto = document.getString("nome") ?: ""
+                                        val emailUser = document.getString("email") ?: email
+                                        val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
+
+                                        getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
+                                            .putString("user_id", userId)
+                                            .putString("user_role", "aluno")
+                                            .putString("nome_completo", nomeCompleto)
+                                            .putString("primeiro_nome", primeiroNome)
+                                            .putString("email", emailUser)
+                                            .apply()
+
+                                        Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                        startActivity(Intent(this, HomeAlunoActivity::class.java))
+                                        finish()
                                     }
                                 } else {
                                     Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()

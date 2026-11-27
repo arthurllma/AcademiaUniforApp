@@ -110,10 +110,11 @@ class CadastroActivity : AppCompatActivity() {
             if (isValid) {
                 it.isEnabled = false
 
-                val cleanEmail = email.trim().lowercase()
+                val emailNormalizado = email.trim().lowercase()
+                val isFuncionario = emailNormalizado.endsWith("@instrutor.unifor.br") || emailNormalizado.endsWith("@adm.unifor.br")
                 val tipo = when {
-                    cleanEmail.endsWith("@adm.unifor.br") -> "adm"
-                    cleanEmail.endsWith("@instrutor.unifor.br") -> "instrutor"
+                    emailNormalizado.endsWith("@adm.unifor.br") -> "adm"
+                    emailNormalizado.endsWith("@instrutor.unifor.br") -> "instrutor"
                     else -> "aluno"
                 }
                 val status = "pendente"
@@ -137,7 +138,7 @@ class CadastroActivity : AppCompatActivity() {
                             "status" to status,
                             "tipo" to tipo,
                             "statusFicha" to "Aguardando Ficha",
-                            "isTriagemConcluida" to (tipo != "aluno")
+                            "isTriagemConcluida" to isFuncionario
                         )
 
                         db.collection("usuarios").document(userId)
@@ -154,18 +155,18 @@ class CadastroActivity : AppCompatActivity() {
                                     .putString("email", email)
                                     .apply()
 
-                                if (tipo == "aluno") {
-                                    Toast.makeText(this, "Cadastro realizado! Preencha a triagem para continuar.", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(this, TriagemActivity::class.java)
-                                    intent.putExtra("USER_UID", userId)
-                                    intent.putExtra("user_id", userId)
+                                if (isFuncionario) {
+                                    Toast.makeText(this, "Cadastro realizado! Aguarde a aprovação do Administrador para fazer login.", Toast.LENGTH_LONG).show()
+                                    auth.signOut()
+                                    val intent = Intent(this, LoginActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(intent)
                                     finish()
                                 } else {
-                                    Toast.makeText(this, "Cadastro enviado! Aguarde a aprovação do Administrador para acessar o sistema.", Toast.LENGTH_LONG).show()
-                                    auth.signOut()
-                                    val intent = Intent(this, LoginActivity::class.java)
+                                    Toast.makeText(this, "Cadastro realizado! Preencha a triagem para continuar.", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this, TriagemActivity::class.java)
+                                    intent.putExtra("USER_UID", userId)
+                                    intent.putExtra("user_id", userId)
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(intent)
                                     finish()
