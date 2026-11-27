@@ -1,24 +1,25 @@
 package br.com.academiaunifortelas1.repository
 
+import br.com.academiaunifortelas1.model.ExercicioItem
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import java.util.Calendar
 
 object FichaTreinoRepository {
 
     /**
-     * Associa um treino da biblioteca a um aluno no Firestore.
-     * Registra dataInicio como Timestamp.now() e calcula dataVencimento
-     * se prazoValidadeDias != null.
+     * Associa um treino da biblioteca ou personalizado a um aluno no Firestore.
+     * Salva as listas treinoA, treinoB e treinoC no documento usuarios/{alunoId}/fichas/ficha_atual.
      */
     fun associarTreinoAoAluno(
         alunoId: String,
         treinoId: String,
         nomeTreino: String,
         prazoValidadeDias: Int?,
-        exerciciosA: List<Map<String, Any>> = emptyList(),
-        exerciciosB: List<Map<String, Any>> = emptyList(),
-        exerciciosC: List<Map<String, Any>> = emptyList(),
+        treinoA: List<ExercicioItem> = emptyList(),
+        treinoB: List<ExercicioItem> = emptyList(),
+        treinoC: List<ExercicioItem> = emptyList(),
         onComplete: (Boolean, String?) -> Unit
     ) {
         val db = FirebaseFirestore.getInstance()
@@ -34,6 +35,11 @@ object FichaTreinoRepository {
             null
         }
 
+        // Mapear para compatibilidade retroativa com exerciciosA/B/C
+        val mapA = treinoA.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) }
+        val mapB = treinoB.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) }
+        val mapC = treinoC.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) }
+
         val dadosFicha = hashMapOf(
             "alunoId" to alunoId,
             "treinoId" to treinoId,
@@ -41,26 +47,29 @@ object FichaTreinoRepository {
             "prazoValidadeDias" to prazoValidadeDias,
             "dataInicio" to dataInicio,
             "dataVencimento" to dataVencimento,
-            "exerciciosA" to exerciciosA,
-            "exerciciosB" to exerciciosB,
-            "exerciciosC" to exerciciosC
+            "treinoA" to treinoA,
+            "treinoB" to treinoB,
+            "treinoC" to treinoC,
+            "exerciciosA" to mapA,
+            "exerciciosB" to mapB,
+            "exerciciosC" to mapC
         )
 
-        val status = calcularStatusFicha(hasFicha = true, dataVencimento = dataVencimento)
+        val statusCalculado = calcularStatusFicha(hasFicha = true, dataVencimento = dataVencimento)
 
         // Salvar documento da ficha do aluno
         db.collection("usuarios").document(alunoId)
             .collection("fichas").document("ficha_atual")
-            .set(dadosFicha)
+            .set(dadosFicha, SetOptions.merge())
             .addOnSuccessListener {
-                // Atualizar statusFicha no cadastro do aluno
+                // Atualizar statusFicha e flags no cadastro do aluno
                 val updates = hashMapOf<String, Any?>(
-                    "statusFicha" to status,
+                    "statusFicha" to statusCalculado,
                     "hasFicha" to true,
                     "dataVencimento" to dataVencimento
                 )
                 db.collection("usuarios").document(alunoId)
-                    .update(updates)
+                    .set(updates, SetOptions.merge())
                     .addOnSuccessListener { onComplete(true, null) }
                     .addOnFailureListener { e -> onComplete(false, e.message) }
             }
@@ -70,10 +79,32 @@ object FichaTreinoRepository {
     }
 
     /**
+     * Busca a ficha atual do aluno em usuarios/{alunoId}/fichas/ficha_atual.
+     */
+    fun obterFichaAtual(alunoId: String, onResult: (Map<String, Any>?) -> Unit) {
+        if (alunoId.isEmpty()) {
+            onResult(null)
+            return
+        }
+
+        FirebaseFirestore.getInstance()
+            .collection("usuarios").document(alunoId)
+            .collection("fichas").document("ficha_atual")
+            .get()
+            .addOnSuccessListener { doc ->
+                if (doc != null && doc.exists()) {
+                    onResult(doc.data)
+                } else {
+                    onResult(null)
+                }
+            }
+            .addOnFailureListener {
+                onResult(null)
+            }
+    }
+
+    /**
      * Função utilitária para verificar o status da ficha do aluno.
-     * - Sem ficha -> "Aguardando Ficha"
-     * - Com dataVencimento != null e data atual (Timestamp.now()) for posterior à dataVencimento -> "Ficha Vencida"
-     * - Caso contrário -> "Ficha Ativa"
      */
     fun calcularStatusFicha(hasFicha: Boolean, dataVencimento: Timestamp?): String {
         if (!hasFicha) {

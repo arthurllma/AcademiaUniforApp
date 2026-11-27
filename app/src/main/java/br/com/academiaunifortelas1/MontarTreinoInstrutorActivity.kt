@@ -14,41 +14,17 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import br.com.academiaunifortelas1.model.ExercicioItem
+import br.com.academiaunifortelas1.model.TreinoModel
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class MontarTreinoInstrutorActivity : AppCompatActivity() {
 
-    private data class ExercicioEditavel(
-        val nome: String,
-        val series: String,
-        val reps: String,
-        val carga: String,
-        val descanso: String
-    )
-
-    private val exerciciosA = mutableListOf(
-        ExercicioEditavel("Supino Reto", "4", "12", "60 kg", "60 s"),
-        ExercicioEditavel("Supino Inclinado", "4", "10", "50 kg", "60 s"),
-        ExercicioEditavel("Crucifixo", "3", "12", "16 kg", "45 s"),
-        ExercicioEditavel("Tríceps Pulley", "4", "12", "35 kg", "45 s"),
-        ExercicioEditavel("Tríceps Francês", "3", "12", "14 kg", "45 s")
-    )
-
-    private val exerciciosB = mutableListOf(
-        ExercicioEditavel("Leg Press 45", "4", "12", "120 kg", "90 s"),
-        ExercicioEditavel("Extensor de Pernas", "4", "12", "45 kg", "60 s"),
-        ExercicioEditavel("Flexora Sentada", "3", "15", "40 kg", "60 s"),
-        ExercicioEditavel("Adutora", "3", "15", "30 kg", "45 s"),
-        ExercicioEditavel("Abdutora", "3", "15", "35 kg", "45 s")
-    )
-
-    private val exerciciosC = mutableListOf(
-        ExercicioEditavel("Puxada Frontal", "4", "12", "50 kg", "60 s"),
-        ExercicioEditavel("Remada Curvada", "4", "10", "40 kg", "60 s"),
-        ExercicioEditavel("Rosca Direta", "3", "12", "15 kg", "45 s"),
-        ExercicioEditavel("Rosca Martelo", "3", "12", "12 kg", "45 s")
-    )
+    private val exerciciosA = mutableListOf<ExercicioItem>()
+    private val exerciciosB = mutableListOf<ExercicioItem>()
+    private val exerciciosC = mutableListOf<ExercicioItem>()
 
     private var abaAtual = "A"
 
@@ -89,7 +65,6 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         etCarga = findViewById(R.id.etCarga)
         etDescanso = findViewById(R.id.etDescanso)
 
-        // Configurar as opções do seletor de prazo de vencimento
         val prazoOptions = arrayOf(
             "Sem vencimento (padrão)",
             "1 mês (30 dias)",
@@ -100,6 +75,9 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         val adapterPrazo = ArrayAdapter(this, R.layout.spinner_item, prazoOptions)
         adapterPrazo.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spPrazoVencimento.adapter = adapterPrazo
+
+        // Inicializar com alguns exercícios padrão se vazios
+        carregarExerciciosExemplo()
 
         val treinoTipo = intent.getStringExtra("treino_tipo")
         val treinoNome = intent.getStringExtra("treino_nome")
@@ -124,7 +102,7 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
                 val carga = etCarga.text.toString().ifEmpty { "50 kg" }
                 val descanso = etDescanso.text.toString().ifEmpty { "60 s" }
 
-                val novoEx = ExercicioEditavel(nome, series, reps, carga, descanso)
+                val novoEx = ExercicioItem(nome = nome, series = series, reps = reps, carga = carga, descanso = descanso)
                 getListaAtiva().add(novoEx)
                 etSelecionarExercicio.setText("")
                 renderizarListaExercicio()
@@ -135,24 +113,43 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnSalvarTreino)?.setOnClickListener {
-            val nome = etNomeTreino.text.toString().trim()
+            val nomeTreino = etNomeTreino.text.toString().trim()
+            if (nomeTreino.isEmpty()) {
+                Toast.makeText(this, "Informe o nome do treino.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (exerciciosA.isEmpty() && exerciciosB.isEmpty() && exerciciosC.isEmpty()) {
+                Toast.makeText(this, "Adicione pelo menos um exercício ao treino.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val objetivo = findViewById<EditText>(R.id.etObjetivoTreino)?.text?.toString()?.trim() ?: ""
             val nivel = findViewById<EditText>(R.id.etNivelTreino)?.text?.toString()?.trim() ?: ""
             val prazoValidadeDias = getPrazoValidadeDiasSelecionado()
+            val criadoPor = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
-            val treinoMap = hashMapOf(
-                "nome" to nome,
-                "objetivo" to objetivo,
-                "nivel" to nivel,
-                "prazoValidadeDias" to prazoValidadeDias,
-                "exerciciosA" to exerciciosA.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
-                "exerciciosB" to exerciciosB.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
-                "exerciciosC" to exerciciosC.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
-                "criadoEm" to Timestamp.now()
+            val db = FirebaseFirestore.getInstance()
+            val docRef = db.collection("biblioteca_treinos").document()
+
+            val treinoModel = TreinoModel(
+                id = docRef.id,
+                nomeTreino = nomeTreino,
+                nome = nomeTreino,
+                objetivo = objetivo,
+                nivel = nivel,
+                prazoValidadeDias = prazoValidadeDias,
+                criadoPor = criadoPor,
+                criadoEm = Timestamp.now(),
+                treinoA = exerciciosA,
+                treinoB = exerciciosB,
+                treinoC = exerciciosC,
+                exerciciosA = exerciciosA.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
+                exerciciosB = exerciciosB.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) },
+                exerciciosC = exerciciosC.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga, "descanso" to it.descanso) }
             )
 
-            FirebaseFirestore.getInstance().collection("biblioteca_treinos")
-                .add(treinoMap)
+            docRef.set(treinoModel)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Treino salvo na biblioteca com sucesso!", Toast.LENGTH_SHORT).show()
                     finish()
@@ -165,6 +162,31 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         selecionarAba(abaAtual)
     }
 
+    private fun carregarExerciciosExemplo() {
+        if (exerciciosA.isEmpty()) {
+            exerciciosA.addAll(listOf(
+                ExercicioItem("Supino Reto", "4", "12", "60 kg", "60 s"),
+                ExercicioItem("Supino Inclinado", "4", "10", "50 kg", "60 s"),
+                ExercicioItem("Crucifixo", "3", "12", "16 kg", "45 s"),
+                ExercicioItem("Tríceps Pulley", "4", "12", "35 kg", "45 s")
+            ))
+        }
+        if (exerciciosB.isEmpty()) {
+            exerciciosB.addAll(listOf(
+                ExercicioItem("Leg Press 45", "4", "12", "120 kg", "90 s"),
+                ExercicioItem("Extensor de Pernas", "4", "12", "45 kg", "60 s"),
+                ExercicioItem("Flexora Sentada", "3", "15", "40 kg", "60 s")
+            ))
+        }
+        if (exerciciosC.isEmpty()) {
+            exerciciosC.addAll(listOf(
+                ExercicioItem("Puxada Frontal", "4", "12", "50 kg", "60 s"),
+                ExercicioItem("Remada Curvada", "4", "10", "40 kg", "60 s"),
+                ExercicioItem("Rosca Direta", "3", "12", "15 kg", "45 s")
+            ))
+        }
+    }
+
     private fun getPrazoValidadeDiasSelecionado(): Int? {
         return when (spPrazoVencimento.selectedItemPosition) {
             1 -> 30
@@ -175,7 +197,7 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
         }
     }
 
-    private fun getListaAtiva(): MutableList<ExercicioEditavel> {
+    private fun getListaAtiva(): MutableList<ExercicioItem> {
         return when (abaAtual) {
             "B" -> exerciciosB
             "C" -> exerciciosC
@@ -245,7 +267,8 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
             }
 
             val tvDetalhes = TextView(this).apply {
-                text = "${ex.series} × ${ex.reps} • ${ex.carga} • ${ex.descanso}"
+                val desc = if (ex.descanso.isNotEmpty()) " • ${ex.descanso}" else ""
+                text = "${ex.series} × ${ex.reps} • ${ex.carga}$desc"
                 setTextColor(Color.parseColor("#64748B"))
                 textSize = 14f
             }
@@ -253,7 +276,6 @@ class MontarTreinoInstrutorActivity : AppCompatActivity() {
             infoLayout.addView(tvNome)
             infoLayout.addView(tvDetalhes)
 
-            // Ações: Editar e Deletar
             val actionsLayout = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = RelativeLayout.LayoutParams(

@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.academiaunifortelas1.model.AlunoModel
+import br.com.academiaunifortelas1.model.ExercicioItem
 import br.com.academiaunifortelas1.model.TreinoModel
 import br.com.academiaunifortelas1.repository.AlunosRepository
 import br.com.academiaunifortelas1.repository.ExerciciosRepository
@@ -25,35 +26,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class MontarFichaAlunoActivity : AppCompatActivity() {
 
-    private data class ExercicioEditavel(
-        var nome: String,
-        var series: String,
-        var reps: String,
-        var carga: String
-    )
-
-    private val exerciciosA = mutableListOf(
-        ExercicioEditavel("Supino Reto", "4", "12", "60kg"),
-        ExercicioEditavel("Supino Inclinado", "4", "10", "50kg"),
-        ExercicioEditavel("Crucifixo", "3", "12", "16kg"),
-        ExercicioEditavel("Tríceps Pulley", "4", "12", "35kg"),
-        ExercicioEditavel("Tríceps Francês", "3", "12", "14kg")
-    )
-
-    private val exerciciosB = mutableListOf(
-        ExercicioEditavel("Leg Press 45", "4", "12", "120kg"),
-        ExercicioEditavel("Extensor de Pernas", "4", "12", "45kg"),
-        ExercicioEditavel("Flexora Sentada", "3", "15", "40kg"),
-        ExercicioEditavel("Adutora", "3", "15", "30kg"),
-        ExercicioEditavel("Abdutora", "3", "15", "35kg")
-    )
-
-    private val exerciciosC = mutableListOf(
-        ExercicioEditavel("Puxada Frontal", "4", "12", "50kg"),
-        ExercicioEditavel("Remada Curvada", "4", "10", "40kg"),
-        ExercicioEditavel("Rosca Direta", "3", "12", "15kg"),
-        ExercicioEditavel("Rosca Martelo", "3", "12", "12kg")
-    )
+    private val exerciciosA = mutableListOf<ExercicioItem>()
+    private val exerciciosB = mutableListOf<ExercicioItem>()
+    private val exerciciosC = mutableListOf<ExercicioItem>()
 
     private var abaAtual = "A"
     private var alunoId: String = ""
@@ -173,7 +148,6 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
     }
 
     private fun configurarSpinners() {
-        // Dropdown Prazo de vencimento
         val prazos = arrayOf(
             "Sem vencimento (padrão)",
             "1 mês (30 dias)",
@@ -185,7 +159,6 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
         adapterPrazo.setDropDownViewResource(R.layout.spinner_dropdown_item)
         spPrazoVencimento.adapter = adapterPrazo
 
-        // Dropdown Selecionar Exercício
         val nomesExercicios = ExerciciosRepository.listaExercicios.map { it.nome }
         val adapterExercicios = ArrayAdapter(this, R.layout.spinner_item, nomesExercicios)
         adapterExercicios.setDropDownViewResource(R.layout.spinner_dropdown_item)
@@ -260,6 +233,9 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
                         ?: "Sem lesões"
 
                     exibirDadosAluno(nome, statusFichaFormatado, objetivo, frequencia, statusParq, lesoes)
+
+                    // Carregar a ficha atual do aluno se já possuir
+                    carregarFichaAtualAluno()
                 } else {
                     val local = AlunosRepository.listaAlunos.find { it.id == alunoId }
                     exibirDadosAluno(
@@ -283,6 +259,57 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
                     lesoes = "Sem lesões"
                 )
             }
+    }
+
+    private fun carregarFichaAtualAluno() {
+        FichaTreinoRepository.obterFichaAtual(alunoId) { dados ->
+            if (dados != null) {
+                fun parseLista(keyNew: String, keyOld: String): List<ExercicioItem> {
+                    val listRaw = (dados[keyNew] ?: dados[keyOld]) as? List<*> ?: return emptyList()
+                    return listRaw.mapNotNull { item ->
+                        when (item) {
+                            is Map<*, *> -> ExercicioItem(
+                                nome = item["nome"]?.toString() ?: "",
+                                series = item["series"]?.toString() ?: "4",
+                                reps = item["reps"]?.toString() ?: "12",
+                                carga = item["carga"]?.toString() ?: "",
+                                descanso = item["descanso"]?.toString() ?: ""
+                            )
+                            else -> null
+                        }
+                    }
+                }
+
+                val listA = parseLista("treinoA", "exerciciosA")
+                val listB = parseLista("treinoB", "exerciciosB")
+                val listC = parseLista("treinoC", "exerciciosC")
+
+                if (listA.isNotEmpty() || listB.isNotEmpty() || listC.isNotEmpty()) {
+                    exerciciosA.clear()
+                    exerciciosA.addAll(listA)
+
+                    exerciciosB.clear()
+                    exerciciosB.addAll(listB)
+
+                    exerciciosC.clear()
+                    exerciciosC.addAll(listC)
+
+                    val prazo = (dados["prazoValidadeDias"] as? Number)?.toInt()
+                    if (prazo != null) {
+                        val pos = when (prazo) {
+                            30 -> 1
+                            60 -> 2
+                            90 -> 3
+                            180 -> 4
+                            else -> 0
+                        }
+                        spPrazoVencimento.setSelection(pos)
+                    }
+
+                    renderizarListaExercicios()
+                }
+            }
+        }
     }
 
     private fun exibirDadosAluno(
@@ -321,54 +348,10 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
     }
 
     private fun carregarBibliotecaTreinos() {
-        val defaultTreinos = listOf(
-            TreinoModel(
-                id = "treino_a_padrao",
-                nome = "Hipertrofia • Peito, Pernas e Costas",
-                objetivo = "Hipertrofia",
-                prazoValidadeDias = 30,
-                exerciciosA = listOf(
-                    mapOf("nome" to "Supino Reto", "series" to "4", "reps" to "12", "carga" to "60kg"),
-                    mapOf("nome" to "Supino Inclinado", "series" to "4", "reps" to "10", "carga" to "50kg"),
-                    mapOf("nome" to "Crucifixo", "series" to "3", "reps" to "12", "carga" to "16kg"),
-                    mapOf("nome" to "Tríceps Pulley", "series" to "4", "reps" to "12", "carga" to "35kg")
-                ),
-                exerciciosB = listOf(
-                    mapOf("nome" to "Leg Press 45", "series" to "4", "reps" to "12", "carga" to "120kg"),
-                    mapOf("nome" to "Extensor de Pernas", "series" to "4", "reps" to "12", "carga" to "45kg"),
-                    mapOf("nome" to "Flexora Sentada", "series" to "3", "reps" to "15", "carga" to "40kg")
-                ),
-                exerciciosC = listOf(
-                    mapOf("nome" to "Puxada Frontal", "series" to "4", "reps" to "12", "carga" to "50kg"),
-                    mapOf("nome" to "Remada Curvada", "series" to "4", "reps" to "10", "carga" to "40kg"),
-                    mapOf("nome" to "Rosca Direta", "series" to "3", "reps" to "12", "carga" to "15kg")
-                )
-            ),
-            TreinoModel(
-                id = "treino_b_padrao",
-                nome = "Emagrecimento • Full Body / Cardiovasc.",
-                objetivo = "Emagrecimento",
-                prazoValidadeDias = 60,
-                exerciciosA = listOf(
-                    mapOf("nome" to "Supino Reto", "series" to "3", "reps" to "15", "carga" to "40kg"),
-                    mapOf("nome" to "Leg Press 45", "series" to "4", "reps" to "15", "carga" to "90kg")
-                ),
-                exerciciosB = listOf(
-                    mapOf("nome" to "Puxada Frontal", "series" to "4", "reps" to "15", "carga" to "40kg"),
-                    mapOf("nome" to "Extensor de Pernas", "series" to "3", "reps" to "15", "carga" to "35kg")
-                ),
-                exerciciosC = listOf(
-                    mapOf("nome" to "Rosca Direta", "series" to "3", "reps" to "15", "carga" to "10kg"),
-                    mapOf("nome" to "Tríceps Pulley", "series" to "3", "reps" to "15", "carga" to "25kg")
-                )
-            )
-        )
-
         FirebaseFirestore.getInstance().collection("biblioteca_treinos")
-            .get()
-            .addOnSuccessListener { snapshot ->
+            .addSnapshotListener { snapshot, error ->
                 listaTreinosBiblioteca.clear()
-                if (snapshot != null && !snapshot.isEmpty) {
+                if (error == null && snapshot != null && !snapshot.isEmpty) {
                     for (doc in snapshot.documents) {
                         val model = doc.toObject(TreinoModel::class.java)
                         if (model != null) {
@@ -377,21 +360,13 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
                         }
                     }
                 }
-                if (listaTreinosBiblioteca.isEmpty()) {
-                    listaTreinosBiblioteca.addAll(defaultTreinos)
-                }
-                populardropdownTreinosProntos()
-            }
-            .addOnFailureListener {
-                listaTreinosBiblioteca.clear()
-                listaTreinosBiblioteca.addAll(defaultTreinos)
                 populardropdownTreinosProntos()
             }
     }
 
     private fun populardropdownTreinosProntos() {
         val titulos = mutableListOf("Selecionar treino da biblioteca")
-        titulos.addAll(listaTreinosBiblioteca.map { it.nome })
+        titulos.addAll(listaTreinosBiblioteca.map { it.getNomeExibicao() })
 
         val adapter = ArrayAdapter(this, R.layout.spinner_item, titulos)
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
@@ -409,41 +384,15 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
     }
 
     private fun carregarTreinoPronto(treino: TreinoModel) {
-        // Carregar exercícios para cada aba
         exerciciosA.clear()
-        treino.exerciciosA.forEach { exMap ->
-            val nome = exMap["nome"]?.toString() ?: ""
-            val series = exMap["series"]?.toString() ?: "4"
-            val reps = exMap["reps"]?.toString() ?: "12"
-            val carga = exMap["carga"]?.toString() ?: "50kg"
-            if (nome.isNotEmpty()) {
-                exerciciosA.add(ExercicioEditavel(nome, series, reps, carga))
-            }
-        }
+        exerciciosA.addAll(treino.getListaA())
 
         exerciciosB.clear()
-        treino.exerciciosB.forEach { exMap ->
-            val nome = exMap["nome"]?.toString() ?: ""
-            val series = exMap["series"]?.toString() ?: "4"
-            val reps = exMap["reps"]?.toString() ?: "12"
-            val carga = exMap["carga"]?.toString() ?: "50kg"
-            if (nome.isNotEmpty()) {
-                exerciciosB.add(ExercicioEditavel(nome, series, reps, carga))
-            }
-        }
+        exerciciosB.addAll(treino.getListaB())
 
         exerciciosC.clear()
-        treino.exerciciosC.forEach { exMap ->
-            val nome = exMap["nome"]?.toString() ?: ""
-            val series = exMap["series"]?.toString() ?: "4"
-            val reps = exMap["reps"]?.toString() ?: "12"
-            val carga = exMap["carga"]?.toString() ?: "50kg"
-            if (nome.isNotEmpty()) {
-                exerciciosC.add(ExercicioEditavel(nome, series, reps, carga))
-            }
-        }
+        exerciciosC.addAll(treino.getListaC())
 
-        // Pré-selecionar o prazo de vencimento caso esteja definido no modelo
         val prazoDias = treino.prazoValidadeDias
         if (prazoDias != null) {
             val positionPrazo = when (prazoDias) {
@@ -459,10 +408,10 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
         }
 
         renderizarListaExercicios()
-        Toast.makeText(this, "Treino '${treino.nome}' carregado!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Treino '${treino.getNomeExibicao()}' carregado!", Toast.LENGTH_SHORT).show()
     }
 
-    private fun getListaAtiva(): MutableList<ExercicioEditavel> {
+    private fun getListaAtiva(): MutableList<ExercicioItem> {
         return when (abaAtual) {
             "B" -> exerciciosB
             "C" -> exerciciosC
@@ -494,7 +443,7 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
         val reps = etReps.text.toString().ifEmpty { "12" }
         val carga = etCarga.text.toString().ifEmpty { "60kg" }
 
-        val novo = ExercicioEditavel(nome, series, reps, carga)
+        val novo = ExercicioItem(nome = nome, series = series, reps = reps, carga = carga, descanso = "60s")
         getListaAtiva().add(novo)
         renderizarListaExercicios()
         Toast.makeText(this, "Exercício adicionado!", Toast.LENGTH_SHORT).show()
@@ -540,7 +489,8 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
             }
 
             val tvDetalhes = TextView(this).apply {
-                text = "${ex.series}×${ex.reps} — ${ex.carga}"
+                val desc = if (ex.descanso.isNotEmpty()) " • ${ex.descanso}" else ""
+                text = "${ex.series}×${ex.reps} — ${ex.carga}$desc"
                 setTextColor(Color.parseColor("#64748B"))
                 textSize = 14f
             }
@@ -610,23 +560,19 @@ class MontarFichaAlunoActivity : AppCompatActivity() {
         val posTreino = spUsarTreinoPronto.selectedItemPosition
         val (treinoId, nomeTreino) = if (posTreino > 0 && posTreino <= listaTreinosBiblioteca.size) {
             val t = listaTreinosBiblioteca[posTreino - 1]
-            t.id to t.nome
+            t.id to t.getNomeExibicao()
         } else {
             "custom" to "Ficha Personalizada"
         }
-
-        val mapA = exerciciosA.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga) }
-        val mapB = exerciciosB.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga) }
-        val mapC = exerciciosC.map { mapOf("nome" to it.nome, "series" to it.series, "reps" to it.reps, "carga" to it.carga) }
 
         FichaTreinoRepository.associarTreinoAoAluno(
             alunoId = alunoId,
             treinoId = treinoId,
             nomeTreino = nomeTreino,
             prazoValidadeDias = prazoValidadeDias,
-            exerciciosA = mapA,
-            exerciciosB = mapB,
-            exerciciosC = mapC
+            treinoA = exerciciosA,
+            treinoB = exerciciosB,
+            treinoC = exerciciosC
         ) { success, error ->
             if (success) {
                 Toast.makeText(this, "Ficha do aluno salva com sucesso!", Toast.LENGTH_SHORT).show()

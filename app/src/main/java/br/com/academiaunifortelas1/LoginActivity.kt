@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
@@ -44,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
             val email = etEmail?.text?.toString()?.trim() ?: ""
             val senha = etSenha?.text?.toString() ?: ""
 
-            // Resetar erros visuais
             tvErrorEmail?.visibility = View.GONE
             tvErrorSenha?.visibility = View.GONE
 
@@ -69,61 +69,110 @@ class LoginActivity : AppCompatActivity() {
                     .apply()
 
                 Toast.makeText(this, "Login de Administrador realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, HomeInstrutorActivity::class.java))
+                val intent = Intent(this, HomeInstrutorActivity::class.java)
+                intent.putExtra("IS_ADMIN", true)
+                startActivity(intent)
                 finish()
                 return@setOnClickListener
             }
 
             // Rota especial mockada para instrutor
             if (email == "instrutor@unifor.br" && senha == "Unifor*123") {
-                startActivity(Intent(this, HomeInstrutorActivity::class.java))
+                getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
+                    .putString("user_role", "instrutor")
+                    .putString("nome_completo", "Instrutor")
+                    .putString("email", "instrutor@unifor.br")
+                    .apply()
+
+                val intent = Intent(this, HomeInstrutorActivity::class.java)
+                intent.putExtra("IS_ADMIN", false)
+                startActivity(intent)
                 finish()
                 return@setOnClickListener
             }
 
             btnLogin.isEnabled = false
 
-            // Autenticar com o Firebase Authentication
             auth.signInWithEmailAndPassword(email, senha)
                 .addOnSuccessListener {
                     val userId = auth.currentUser?.uid ?: ""
                     if (userId.isNotEmpty()) {
-                        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                        FirebaseFirestore.getInstance()
                             .collection("usuarios")
                             .document(userId)
                             .get()
                             .addOnSuccessListener { document ->
+                                btnLogin.isEnabled = true
+
                                 if (document != null && document.exists()) {
-                                    val status = document.getString("status") ?: "ativo"
+                                    val status = document.getString("status") ?: "aprovado"
                                     if (status.equals("pendente", ignoreCase = true)) {
                                         auth.signOut()
                                         tvErrorSenha?.text = "Seu cadastro está aguardando aprovação do administrador."
                                         tvErrorSenha?.visibility = View.VISIBLE
-                                        btnLogin.isEnabled = true
                                         return@addOnSuccessListener
                                     }
 
+                                    val tipo = document.getString("tipo")?.trim()?.lowercase() ?: "aluno"
                                     val nomeCompleto = document.getString("nome") ?: ""
                                     val emailUser = document.getString("email") ?: email
                                     val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
+                                    val userRole = if (tipo == "adm") "admin" else if (tipo == "instrutor") "instrutor" else "aluno"
 
                                     getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
                                         .putString("user_id", userId)
+                                        .putString("user_role", userRole)
                                         .putString("nome_completo", nomeCompleto)
                                         .putString("primeiro_nome", primeiroNome)
                                         .putString("email", emailUser)
                                         .apply()
 
                                     Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                                    startActivity(Intent(this, HomeAlunoActivity::class.java))
-                                    finish()
+
+                                    when (tipo) {
+                                        "adm" -> {
+                                            val intent = Intent(this, HomeInstrutorActivity::class.java)
+                                            intent.putExtra("IS_ADMIN", true)
+                                            startActivity(intent)
+                                            finish()
+                                        }
+                                        "instrutor" -> {
+                                            val intent = Intent(this, HomeInstrutorActivity::class.java)
+                                            intent.putExtra("IS_ADMIN", false)
+                                            startActivity(intent)
+                                            finish()
+                                        }
+                                        else -> {
+                                            val isTriagemConcluida = document.getBoolean("isTriagemConcluida")
+                                                ?: document.getBoolean("triagemConcluida")
+                                                ?: false
+
+                                            if (!isTriagemConcluida) {
+                                                val intent = Intent(this, TriagemActivity::class.java)
+                                                intent.putExtra("USER_UID", userId)
+                                                intent.putExtra("user_id", userId)
+                                                startActivity(intent)
+                                                finish()
+                                            } else {
+                                                startActivity(Intent(this, HomeAlunoActivity::class.java))
+                                                finish()
+                                            }
+                                        }
+                                    }
                                 } else {
                                     Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
                                     startActivity(Intent(this, HomeAlunoActivity::class.java))
                                     finish()
                                 }
                             }
+                            .addOnFailureListener {
+                                btnLogin.isEnabled = true
+                                Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, HomeAlunoActivity::class.java))
+                                finish()
+                            }
                     } else {
+                        btnLogin.isEnabled = true
                         Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this, HomeAlunoActivity::class.java))
                         finish()

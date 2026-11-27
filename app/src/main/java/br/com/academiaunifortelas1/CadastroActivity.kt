@@ -110,11 +110,18 @@ class CadastroActivity : AppCompatActivity() {
             if (isValid) {
                 it.isEnabled = false
 
+                val cleanEmail = email.trim().lowercase()
+                val (tipo, status) = when {
+                    cleanEmail.endsWith("@adm.unifor.br") -> "adm" to "aprovado"
+                    cleanEmail.endsWith("@instrutor.unifor.br") -> "instrutor" to "aprovado"
+                    else -> "aluno" to "aprovado"
+                }
+
                 auth.createUserWithEmailAndPassword(email, senha)
                     .addOnSuccessListener { authResult ->
                         val userId = authResult.user?.uid ?: ""
 
-                        val dadosUsuario = hashMapOf(
+                        val dadosUsuario = hashMapOf<String, Any>(
                             "id" to userId,
                             "nome" to nome,
                             "cpf" to cpf,
@@ -126,31 +133,42 @@ class CadastroActivity : AppCompatActivity() {
                             "endereco" to endereco,
                             "numero" to numero,
                             "complemento" to complemento,
-                            "status" to "pendente",
-                            "tipo" to "aluno",
+                            "status" to status,
+                            "tipo" to tipo,
                             "statusFicha" to "Aguardando Ficha",
-                            "isTriagemConcluida" to false
+                            "isTriagemConcluida" to (tipo != "aluno")
                         )
 
                         db.collection("usuarios").document(userId)
                             .set(dadosUsuario)
                             .addOnSuccessListener {
                                 val primeiroNome = nome.trim().split(" ").firstOrNull() ?: ""
+                                val userRole = if (tipo == "adm") "admin" else if (tipo == "instrutor") "instrutor" else "aluno"
+
                                 getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit()
                                     .putString("user_id", userId)
+                                    .putString("user_role", userRole)
                                     .putString("nome_completo", nome)
                                     .putString("primeiro_nome", primeiroNome)
                                     .putString("email", email)
                                     .apply()
 
-                                Toast.makeText(this, "Cadastro realizado! Preencha a triagem para continuar.", Toast.LENGTH_SHORT).show()
-
-                                val intent = Intent(this, TriagemActivity::class.java)
-                                intent.putExtra("USER_UID", userId)
-                                intent.putExtra("user_id", userId)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
-                                finish()
+                                if (tipo == "aluno") {
+                                    Toast.makeText(this, "Cadastro realizado! Preencha a triagem para continuar.", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this, TriagemActivity::class.java)
+                                    intent.putExtra("USER_UID", userId)
+                                    intent.putExtra("user_id", userId)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+                                    finish()
+                                } else {
+                                    Toast.makeText(this, "Cadastro de $tipo realizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this, HomeInstrutorActivity::class.java)
+                                    intent.putExtra("IS_ADMIN", tipo == "adm")
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+                                    finish()
+                                }
                             }
                             .addOnFailureListener { e ->
                                 Toast.makeText(this, "Falha ao salvar dados: ${e.message}", Toast.LENGTH_LONG).show()
