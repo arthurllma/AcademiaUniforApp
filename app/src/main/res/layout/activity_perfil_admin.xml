@@ -171,7 +171,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Aulas Coletivas -->
+            <!-- 1. Aulas Coletivas -->
             <RelativeLayout
                 android:id="@+id/rlAulasColetivas"
                 android:layout_width="match_parent"
@@ -206,7 +206,7 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <!-- Gerenciar Funcionários (EXCLUSIVO DO ADMIN) -->
+            <!-- 2. Gerenciar Funcionários -->
             <RelativeLayout
                 android:id="@+id/rlGerenciarFuncionarios"
                 android:layout_width="match_parent"
@@ -241,7 +241,42 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <!-- Catálogo de Exercícios -->
+            <!-- 3. Gerenciar Alunos (Abaixo de Gerenciar Funcionários) -->
+            <RelativeLayout
+                android:id="@+id/rlGerenciarAlunos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_button_outline"
+                android:backgroundTint="#F0F7FF"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Gerenciar Alunos"
+                    android:textColor="@color/dark_navy"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_pill_blue_solid"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp"
+                    android:text="Ver Mais"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <!-- 4. Catálogo de Exercícios -->
             <RelativeLayout
                 android:id="@+id/rlCatalogoExercicios"
                 android:layout_width="match_parent"

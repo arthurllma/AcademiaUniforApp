@@ -56,6 +56,10 @@ class PerfilAdminActivity : AppCompatActivity() {
             startActivity(Intent(this, GerenciarFuncionariosActivity::class.java))
         }
 
+        findViewById<View>(R.id.rlGerenciarAlunos)?.setOnClickListener {
+            startActivity(Intent(this, GerenciarAlunosAdminActivity::class.java))
+        }
+
         findViewById<View>(R.id.rlCatalogoExercicios)?.setOnClickListener {
             startActivity(Intent(this, CatalogoExerciciosActivity::class.java))
         }

@@ -111,11 +111,12 @@ class CadastroActivity : AppCompatActivity() {
                 it.isEnabled = false
 
                 val cleanEmail = email.trim().lowercase()
-                val (tipo, status) = when {
-                    cleanEmail.endsWith("@adm.unifor.br") -> "adm" to "aprovado"
-                    cleanEmail.endsWith("@instrutor.unifor.br") -> "instrutor" to "aprovado"
-                    else -> "aluno" to "aprovado"
+                val tipo = when {
+                    cleanEmail.endsWith("@adm.unifor.br") -> "adm"
+                    cleanEmail.endsWith("@instrutor.unifor.br") -> "instrutor"
+                    else -> "aluno"
                 }
+                val status = "pendente"
 
                 auth.createUserWithEmailAndPassword(email, senha)
                     .addOnSuccessListener { authResult ->
@@ -162,9 +163,9 @@ class CadastroActivity : AppCompatActivity() {
                                     startActivity(intent)
                                     finish()
                                 } else {
-                                    Toast.makeText(this, "Cadastro de $tipo realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                                    val intent = Intent(this, HomeInstrutorActivity::class.java)
-                                    intent.putExtra("IS_ADMIN", tipo == "adm")
+                                    Toast.makeText(this, "Cadastro enviado! Aguarde a aprovação do Administrador para acessar o sistema.", Toast.LENGTH_LONG).show()
+                                    auth.signOut()
+                                    val intent = Intent(this, LoginActivity::class.java)
                                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     startActivity(intent)
                                     finish()

@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -14,8 +13,9 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import br.com.academiaunifortelas1.model.FuncionarioModel
-import br.com.academiaunifortelas1.repository.AdminRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class GerenciarFuncionariosActivity : AppCompatActivity() {
 
@@ -23,6 +23,9 @@ class GerenciarFuncionariosActivity : AppCompatActivity() {
     private lateinit var tvTotalFuncionarios: TextView
     private lateinit var tvBadgePendentes: TextView
     private lateinit var etBuscar: EditText
+
+    private var listenerFirestore: ListenerRegistration? = null
+    private val listaFuncionariosAtivos = mutableListOf<FuncionarioModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,18 +80,57 @@ class GerenciarFuncionariosActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        carregarFuncionariosFirestore()
     }
 
-    override fun onResume() {
-        super.onResume()
-        tvBadgePendentes.text = AdminRepository.cadastrosPendentes.size.toString()
-        renderizarLista(etBuscar.text.toString())
+    private fun carregarFuncionariosFirestore() {
+        val db = FirebaseFirestore.getInstance()
+        listenerFirestore = db.collection("usuarios")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) {
+                    renderizarLista(etBuscar.text.toString())
+                    return@addSnapshotListener
+                }
+
+                listaFuncionariosAtivos.clear()
+                var countPendentes = 0
+
+                for (doc in snapshot.documents) {
+                    val tipo = doc.getString("tipo")?.lowercase() ?: ""
+                    // Filtra EXCLUSIVAMENTE instrutor ou adm
+                    if (tipo == "instrutor" || tipo == "adm") {
+                        val status = doc.getString("status") ?: "aprovado"
+                        if (status.equals("pendente", ignoreCase = true)) {
+                            countPendentes++
+                        } else if (status.equals("aprovado", ignoreCase = true)) {
+                            val id = doc.id
+                            val nome = doc.getString("nome") ?: "Funcionário"
+                            val cargo = if (tipo == "adm") "Administrador" else "Instrutor de Musculação"
+                            val matricula = doc.getString("cpf")?.takeLast(5) ?: "98765"
+                            val email = doc.getString("email") ?: ""
+
+                            listaFuncionariosAtivos.add(
+                                FuncionarioModel(id, nome, cargo, matricula, email, "", "")
+                            )
+                        }
+                    }
+                }
+
+                tvBadgePendentes.text = countPendentes.toString()
+                renderizarLista(etBuscar.text.toString())
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        listenerFirestore?.remove()
     }
 
     private fun renderizarLista(filtro: String) {
         llContainerFuncionarios.removeAllViews()
 
-        val listaFiltrada = AdminRepository.funcionariosAtivos.filter {
+        val listaFiltrada = listaFuncionariosAtivos.filter {
             it.nome.contains(filtro, ignoreCase = true) || it.matricula.contains(filtro, ignoreCase = true) || it.cargo.contains(filtro, ignoreCase = true)
         }
 

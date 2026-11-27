@@ -53,7 +53,6 @@ class TriagemEtapa5Activity : AppCompatActivity() {
 
             TriagemDataManager.termoAceito = true
 
-            // Salvar nas preferências locais para acesso imediato/offline
             val prefsTriagem = getSharedPreferences("TriagemDados", MODE_PRIVATE)
             prefsTriagem.edit()
                 .putString("experiencia", TriagemDataManager.experiencia)
@@ -109,10 +108,9 @@ class TriagemEtapa5Activity : AppCompatActivity() {
                 .addOnSuccessListener {
                     TriagemDataManager.reset()
 
-                    // signOut é chamado apenas após o salvamento ter sido concluído com sucesso
                     auth.signOut()
 
-                    Toast.makeText(this, "Cadastro e triagem concluídos! Aguardando aprovação do administrador.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Cadastro e triagem concluídos! Aguarde a aprovação do Administrador para fazer login.", Toast.LENGTH_LONG).show()
 
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

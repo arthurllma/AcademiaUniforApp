@@ -12,13 +12,16 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import br.com.academiaunifortelas1.model.FuncionarioModel
-import br.com.academiaunifortelas1.repository.AdminRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class CadastrosPendentesActivity : AppCompatActivity() {
 
     private lateinit var llContainerPendentes: LinearLayout
     private lateinit var tvTotalPendentes: TextView
+    private var listenerFirestore: ListenerRegistration? = null
+    private val listaPendentes = mutableListOf<FuncionarioModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,22 +62,54 @@ class CadastrosPendentesActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        carregarCadastrosPendentesFirestore()
     }
 
-    override fun onResume() {
-        super.onResume()
-        renderizarLista()
+    private fun carregarCadastrosPendentesFirestore() {
+        val db = FirebaseFirestore.getInstance()
+        listenerFirestore = db.collection("usuarios")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) {
+                    renderizarLista()
+                    return@addSnapshotListener
+                }
+
+                listaPendentes.clear()
+                for (doc in snapshot.documents) {
+                    val tipo = doc.getString("tipo")?.lowercase() ?: ""
+                    val status = doc.getString("status") ?: ""
+
+                    // Filtra EXCLUSIVAMENTE instrutor ou adm pendente
+                    if ((tipo == "instrutor" || tipo == "adm") && status.equals("pendente", ignoreCase = true)) {
+                        val id = doc.id
+                        val nome = doc.getString("nome") ?: "Funcionário"
+                        val cargo = if (tipo == "adm") "Administrador" else "Instrutor de Musculação"
+                        val email = doc.getString("email") ?: ""
+                        val cref = doc.getString("cref") ?: ""
+
+                        listaPendentes.add(
+                            FuncionarioModel(id, nome, cargo, "", email, cref, "Geral")
+                        )
+                    }
+                }
+
+                renderizarLista()
+            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        listenerFirestore?.remove()
     }
 
     private fun renderizarLista() {
         llContainerPendentes.removeAllViews()
 
-        val lista = AdminRepository.cadastrosPendentes
-
-        if (lista.isEmpty()) {
+        if (listaPendentes.isEmpty()) {
             tvTotalPendentes.text = "NENHUM CADASTRO PENDENTE"
             val tvEmpty = TextView(this).apply {
-                text = "Não há solicitações pendentes no momento."
+                text = "Não há solicitações de funcionários pendentes no momento."
                 setTextColor(Color.parseColor("#64748B"))
                 textSize = 14f
                 setPadding(0, 32, 0, 0)
@@ -83,9 +118,9 @@ class CadastrosPendentesActivity : AppCompatActivity() {
             return
         }
 
-        tvTotalPendentes.text = "${lista.size} CADASTROS PENDENTES"
+        tvTotalPendentes.text = "${listaPendentes.size} CADASTROS PENDENTES"
 
-        for (func in lista) {
+        for (func in listaPendentes) {
             val card = criarCardPendente(func)
             llContainerPendentes.addView(card)
         }
@@ -107,7 +142,6 @@ class CadastrosPendentesActivity : AppCompatActivity() {
             setPadding((16 * density).toInt(), (16 * density).toInt(), (16 * density).toInt(), (16 * density).toInt())
         }
 
-        // Top Row: Nome + Badge Pendente
         val topRow = RelativeLayout(this).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -147,10 +181,8 @@ class CadastrosPendentesActivity : AppCompatActivity() {
         topRow.addView(tvNome)
         topRow.addView(tvBadgePendente)
 
-        // Detalhe Cargo / CREF / Setor
         val detalheCargo = when {
             func.cref.isNotEmpty() -> "${func.cargo} • CREF: ${func.cref}"
-            func.setor.isNotEmpty() -> "${func.cargo} • Setor: ${func.setor}"
             else -> func.cargo
         }
 
@@ -176,7 +208,6 @@ class CadastrosPendentesActivity : AppCompatActivity() {
             setPadding(0, (4 * density).toInt(), 0, (12 * density).toInt())
         }
 
-        // Botões de Ação (Aprovar / Rejeitar)
         val buttonsRow = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             layoutParams = LinearLayout.LayoutParams(
@@ -199,9 +230,11 @@ class CadastrosPendentesActivity : AppCompatActivity() {
                 1f
             )
             setOnClickListener {
-                AdminRepository.aprovarCadastro(func.id)
-                Toast.makeText(this@CadastrosPendentesActivity, "Cadastro de ${func.nome} aprovado!", Toast.LENGTH_SHORT).show()
-                renderizarLista()
+                FirebaseFirestore.getInstance().collection("usuarios").document(func.id)
+                    .update("status", "aprovado")
+                    .addOnSuccessListener {
+                        Toast.makeText(this@CadastrosPendentesActivity, "Cadastro de ${func.nome} aprovado!", Toast.LENGTH_SHORT).show()
+                    }
             }
         }
 
@@ -223,9 +256,11 @@ class CadastrosPendentesActivity : AppCompatActivity() {
                 1f
             )
             setOnClickListener {
-                AdminRepository.rejeitarCadastro(func.id)
-                Toast.makeText(this@CadastrosPendentesActivity, "Cadastro rejeitado!", Toast.LENGTH_SHORT).show()
-                renderizarLista()
+                FirebaseFirestore.getInstance().collection("usuarios").document(func.id)
+                    .update("status", "rejeitado")
+                    .addOnSuccessListener {
+                        Toast.makeText(this@CadastrosPendentesActivity, "Cadastro rejeitado!", Toast.LENGTH_SHORT).show()
+                    }
             }
         }
 

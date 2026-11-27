@@ -14,7 +14,7 @@ class PerfilInstrutorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val role = getSharedPreferences("UsuarioPref", MODE_PRIVATE).getString("user_role", "")
-        if (role == "admin") {
+        if (role == "admin" || role == "adm") {
             startActivity(Intent(this, PerfilAdminActivity::class.java))
             finish()
             return
@@ -60,10 +60,6 @@ class PerfilInstrutorActivity : AppCompatActivity() {
             startActivity(Intent(this, AulasColetivasInstrutorActivity::class.java))
         }
 
-        findViewById<View>(R.id.rlGerenciarFuncionarios)?.setOnClickListener {
-            startActivity(Intent(this, GerenciarFuncionariosActivity::class.java))
-        }
-
         findViewById<View>(R.id.rlCatalogoExercicios)?.setOnClickListener {
             startActivity(Intent(this, CatalogoExerciciosActivity::class.java))
         }
@@ -77,6 +73,7 @@ class PerfilInstrutorActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btnSair).setOnClickListener {
+            getSharedPreferences("UsuarioPref", MODE_PRIVATE).edit().clear().apply()
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)

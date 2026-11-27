@@ -105,15 +105,44 @@ class LoginActivity : AppCompatActivity() {
                                 btnLogin.isEnabled = true
 
                                 if (document != null && document.exists()) {
-                                    val status = document.getString("status") ?: "aprovado"
-                                    if (status.equals("pendente", ignoreCase = true)) {
-                                        auth.signOut()
-                                        tvErrorSenha?.text = "Seu cadastro está aguardando aprovação do administrador."
-                                        tvErrorSenha?.visibility = View.VISIBLE
+                                    val tipo = document.getString("tipo")?.trim()?.lowercase() ?: "aluno"
+                                    val isTriagemConcluida = document.getBoolean("isTriagemConcluida")
+                                        ?: document.getBoolean("triagemConcluida")
+                                        ?: false
+
+                                    // 1. Se aluno e triagem não foi concluída -> redirecionar para TriagemActivity
+                                    if (tipo == "aluno" && !isTriagemConcluida) {
+                                        val intent = Intent(this, TriagemActivity::class.java)
+                                        intent.putExtra("USER_UID", userId)
+                                        intent.putExtra("user_id", userId)
+                                        startActivity(intent)
+                                        finish()
                                         return@addOnSuccessListener
                                     }
 
-                                    val tipo = document.getString("tipo")?.trim()?.lowercase() ?: "aluno"
+                                    val status = document.getString("status")?.trim()?.lowercase() ?: "aprovado"
+
+                                    // 2. Se status == "pendente" -> bloquear
+                                    if (status == "pendente") {
+                                        auth.signOut()
+                                        val msg = "Seu cadastro ainda está aguardando aprovação do Administrador."
+                                        tvErrorSenha?.text = msg
+                                        tvErrorSenha?.visibility = View.VISIBLE
+                                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                                        return@addOnSuccessListener
+                                    }
+
+                                    // 3. Se status == "rejeitado" -> bloquear
+                                    if (status == "rejeitado") {
+                                        auth.signOut()
+                                        val msg = "Seu cadastro foi rejeitado pela administração."
+                                        tvErrorSenha?.text = msg
+                                        tvErrorSenha?.visibility = View.VISIBLE
+                                        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                                        return@addOnSuccessListener
+                                    }
+
+                                    // 4. Se status == "aprovado" -> autorizar login
                                     val nomeCompleto = document.getString("nome") ?: ""
                                     val emailUser = document.getString("email") ?: email
                                     val primeiroNome = nomeCompleto.trim().split(" ").firstOrNull() ?: ""
@@ -143,20 +172,8 @@ class LoginActivity : AppCompatActivity() {
                                             finish()
                                         }
                                         else -> {
-                                            val isTriagemConcluida = document.getBoolean("isTriagemConcluida")
-                                                ?: document.getBoolean("triagemConcluida")
-                                                ?: false
-
-                                            if (!isTriagemConcluida) {
-                                                val intent = Intent(this, TriagemActivity::class.java)
-                                                intent.putExtra("USER_UID", userId)
-                                                intent.putExtra("user_id", userId)
-                                                startActivity(intent)
-                                                finish()
-                                            } else {
-                                                startActivity(Intent(this, HomeAlunoActivity::class.java))
-                                                finish()
-                                            }
+                                            startActivity(Intent(this, HomeAlunoActivity::class.java))
+                                            finish()
                                         }
                                     }
                                 } else {
@@ -167,9 +184,8 @@ class LoginActivity : AppCompatActivity() {
                             }
                             .addOnFailureListener {
                                 btnLogin.isEnabled = true
-                                Toast.makeText(this, "Login realizado com sucesso!", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, HomeAlunoActivity::class.java))
-                                finish()
+                                tvErrorSenha?.text = "Erro ao carregar perfil do usuário."
+                                tvErrorSenha?.visibility = View.VISIBLE
                             }
                     } else {
                         btnLogin.isEnabled = true

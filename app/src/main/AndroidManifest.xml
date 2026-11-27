@@ -59,6 +59,8 @@
         <activity android:name=".PerfilAdminActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".GerenciarFuncionariosActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".CadastrosPendentesActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".GerenciarAlunosAdminActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CadastrosAlunosAdminActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ParqActivity"
