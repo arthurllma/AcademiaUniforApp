@@ -16,12 +16,13 @@
 
         <ImageView
             android:id="@+id/ivIconMoema"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="4dp"
             android:contentDescription="Moema"
-            android:src="@drawable/ic_academia_logo" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/icone_moema" />
 
         <TextView
             android:id="@+id/tvMensagemMoema"

@@ -3,13 +3,18 @@ package br.com.academiaunifortelas1
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +27,7 @@ import com.google.firebase.ai.type.content
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 
 class ChatbotMoemaDialogFragment : DialogFragment() {
 
@@ -34,7 +40,33 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
     private val mensagens = mutableListOf<ChatMensagem>()
     private lateinit var adapter: ChatAdapter
     private var chatSession: com.google.firebase.ai.Chat? = null
-    private var generativeModel: GenerativeModel? = null
+    private var systemInstructionText: String = ""
+
+    private fun criarGenerativeModel(modelName: String): GenerativeModel {
+        return Firebase.ai(backend = GenerativeBackend.googleAI())
+            .generativeModel(
+                modelName = modelName,
+                systemInstruction = content { text(systemInstructionText) }
+            )
+    }
+
+    private fun criarChatSession(modelName: String): com.google.firebase.ai.Chat? {
+        return try {
+            val model = criarGenerativeModel(modelName)
+            model.startChat()
+        } catch (e: Exception) {
+            Log.e("MoemaChat", "Erro ao criar chat session para $modelName", e)
+            null
+        }
+    }
+
+    private fun limparMarkdown(texto: String): String {
+        return texto
+            .replace("**", "")
+            .replace("###", "")
+            .replace("---", "")
+            .trim()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +83,39 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
         val etInput = view.findViewById<EditText>(R.id.etChatInput)
         val btnEnviar = view.findViewById<View>(R.id.btnEnviarChat)
         val btnFechar = view.findViewById<View>(R.id.btnFecharChat)
+        val cardChatbot = view.findViewById<View>(R.id.cardChatbot)
+
+        cardChatbot?.clipToOutline = true
+
+        val density = resources.displayMetrics.density
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            val bottomPadding = if (imeBottom > 0) {
+                imeBottom + (16 * density).toInt()
+            } else {
+                sysBars.bottom + (32 * density).toInt()
+            }
+
+            val topPadding = sysBars.top + (32 * density).toInt()
+            val sidePadding = sysBars.left + (20 * density).toInt()
+
+            v.setPadding(
+                sidePadding,
+                topPadding,
+                sidePadding,
+                bottomPadding
+            )
+
+            if (imeBottom > 0 && mensagens.isNotEmpty()) {
+                rvMensagens.post {
+                    rvMensagens.smoothScrollToPosition(mensagens.size - 1)
+                }
+            }
+            insets
+        }
 
         adapter = ChatAdapter(mensagens)
         rvMensagens.layoutManager = LinearLayoutManager(requireContext())
@@ -71,7 +136,9 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
 
         fun enviarMensagem() {
             val textoPrompt = etInput.text.toString().trim()
-            if (textoPrompt.isEmpty()) return
+            if (textoPrompt.isEmpty() || !btnEnviar.isEnabled) return
+
+            btnEnviar.isEnabled = false
 
             // Adiciona mensagem do aluno
             mensagens.add(ChatMensagem(texto = textoPrompt, isMoema = false))
@@ -80,49 +147,48 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
             rvMensagens.smoothScrollToPosition(mensagens.size - 1)
 
             // Adiciona indicador "Moema está digitando..."
-            val posTyping = mensagens.size
-            mensagens.add(ChatMensagem(texto = "Moema está digitando...", isMoema = true, isTyping = true))
-            adapter.notifyItemInserted(posTyping)
-            rvMensagens.smoothScrollToPosition(posTyping)
+            val msgDigitando = ChatMensagem(texto = "Moema está digitando...", isMoema = true, isTyping = true)
+            mensagens.add(msgDigitando)
+            adapter.notifyItemInserted(mensagens.size - 1)
+            rvMensagens.smoothScrollToPosition(mensagens.size - 1)
 
             lifecycleScope.launch {
+                var respostaTexto: String? = null
                 try {
-                    val response = chatSession?.sendMessage(textoPrompt)
-                    val respostaTexto = response?.text
-
-                    // Remove indicador de digitação
-                    if (posTyping < mensagens.size && mensagens[posTyping].isTyping) {
-                        mensagens.removeAt(posTyping)
-                        adapter.notifyItemRemoved(posTyping)
+                    // Tenta primeiro com o modelo principal (gemini-3.8-flash) com timeout de 15s
+                    respostaTexto = withTimeout(15000L) {
+                        if (chatSession == null) {
+                            chatSession = criarChatSession("gemini-3.8-flash")
+                        }
+                        chatSession?.sendMessage(textoPrompt)?.text
                     }
-
-                    val msgFinal = if (!respostaTexto.isNullOrBlank()) {
-                        respostaTexto
-                    } else {
-                        "Ops! Não consegui entender a resposta. Poderia reformular a dúvida?"
-                    }
-
-                    mensagens.add(ChatMensagem(texto = msgFinal, isMoema = true))
-                    adapter.notifyItemInserted(mensagens.size - 1)
-                    rvMensagens.smoothScrollToPosition(mensagens.size - 1)
-
                 } catch (e: Exception) {
-                    // Remove indicador de digitação se ainda estiver presente
-                    val typingIndex = mensagens.indexOfFirst { it.isTyping }
-                    if (typingIndex != -1) {
-                        mensagens.removeAt(typingIndex)
-                        adapter.notifyItemRemoved(typingIndex)
+                    Log.w("MoemaChat", "Falha ou timeout no modelo principal (gemini-3.8-flash), tentando fallback...", e)
+                    try {
+                        // Fallback automático com modelo de reserva (gemini-3.8-flash-lite)
+                        val chatSessionReserva = criarChatSession("gemini-3.8-flash-lite")
+                        respostaTexto = withTimeout(15000L) {
+                            chatSessionReserva?.sendMessage(textoPrompt)?.text
+                        }
+                    } catch (e2: Exception) {
+                        Log.e("MoemaChat", "Falha na IA (modelo principal e fallback)", e2)
                     }
-
-                    mensagens.add(
-                        ChatMensagem(
-                            texto = "Ops! Não consegui me conectar no momento. Tente novamente em instantes.",
-                            isMoema = true
-                        )
-                    )
-                    adapter.notifyItemInserted(mensagens.size - 1)
-                    rvMensagens.smoothScrollToPosition(mensagens.size - 1)
+                } finally {
+                    btnEnviar.isEnabled = true
                 }
+
+                mensagens.remove(msgDigitando)
+                adapter.notifyDataSetChanged()
+
+                val msgFinal = if (!respostaTexto.isNullOrBlank()) {
+                    limparMarkdown(respostaTexto)
+                } else {
+                    "Ops! Estou sem conexão no momento. Verifique sua internet e tente novamente."
+                }
+
+                mensagens.add(ChatMensagem(texto = msgFinal, isMoema = true))
+                adapter.notifyItemInserted(mensagens.size - 1)
+                rvMensagens.smoothScrollToPosition(mensagens.size - 1)
             }
         }
 
@@ -172,7 +238,7 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
     }
 
     private fun inicializarGemini(nome: String, objetivo: String, lesoes: String, statusParq: String) {
-        val systemInstructionText = """
+        systemInstructionText = """
             Você é a Moema, a assistente virtual amigável, objetiva e segura da Academia UNIFOR.
             Seu objetivo é ajudar os alunos com a execução correta dos exercícios, músculos trabalhados e dicas de postura.
             Responda sempre em português de forma clara, acolhedora e direta.
@@ -185,29 +251,22 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
             
             Diretrizes Importantes:
             Se o aluno possuir alguma lesão ou alerta do PAR-Q registrado, adapte sempre as suas instruções de postura e execução para prevenir agravamento dessas restrições e recomende os devidos cuidados.
+            Responda apenas em texto simples, sem usar asteriscos (**), cerquilhas (###) ou traços (---). Use apenas quebras de linha e tópicos simples com bullet (•).
         """.trimIndent()
 
-        try {
-            val model = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
-                modelName = "gemini-2.5-flash",
-                systemInstruction = content { text(systemInstructionText) }
-            )
-            generativeModel = model
-            chatSession = model.startChat()
-        } catch (e: Exception) {
-            // Em caso de erro na inicializacao
-        }
+        chatSession = criarChatSession("gemini-3.8-flash")
     }
 
     override fun onStart() {
         super.onStart()
         dialog?.window?.apply {
             setLayout(
-                (resources.displayMetrics.widthPixels * 0.90).toInt(),
-                (resources.displayMetrics.heightPixels * 0.85).toInt()
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+            WindowCompat.setDecorFitsSystemWindows(this, false)
         }
     }
 
@@ -216,6 +275,7 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
 
         class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val llMoema: View = itemView.findViewById(R.id.llContainerMoema)
+            val ivIconMoema: ImageView = itemView.findViewById(R.id.ivIconMoema)
             val tvMoema: TextView = itemView.findViewById(R.id.tvMensagemMoema)
             val llAluno: View = itemView.findViewById(R.id.llContainerAluno)
             val tvAluno: TextView = itemView.findViewById(R.id.tvMensagemAluno)
@@ -232,6 +292,7 @@ class ChatbotMoemaDialogFragment : DialogFragment() {
             if (item.isMoema) {
                 holder.llMoema.visibility = View.VISIBLE
                 holder.llAluno.visibility = View.GONE
+                holder.ivIconMoema.setImageResource(R.drawable.icone_moema)
                 holder.tvMoema.text = item.texto
                 if (item.isTyping) {
                     holder.tvMoema.setTypeface(null, android.graphics.Typeface.ITALIC)
