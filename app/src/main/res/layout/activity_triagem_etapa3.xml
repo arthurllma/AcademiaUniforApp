@@ -248,13 +248,14 @@
                         android:layout_height="wrap_content"
                         android:checked="false" />
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/tvAlertQ5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="12dp"
-                    android:text="⚠️ Alerta de restrição registrado para a equipe médica."
+                    android:text="⚠️Descreva brevemente para o(a) instrutor(a)"
                     android:textColor="#D97706"
                     android:textSize="12sp"
                     android:visibility="gone" />

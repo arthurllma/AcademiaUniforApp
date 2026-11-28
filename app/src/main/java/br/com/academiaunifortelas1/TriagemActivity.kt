@@ -153,8 +153,12 @@ class TriagemActivity : AppCompatActivity() {
 
                         TriagemDataManager.lesoes = (triagem?.get("lesoes") as? String)
                             ?: doc.getString("lesoes") ?: doc.getString("lesao") ?: ""
-                        TriagemDataManager.esportes = doc.getString("esportes") ?: ""
-                        TriagemDataManager.observacoes = doc.getString("observacoes") ?: ""
+                        TriagemDataManager.esportes = (triagem?.get("esportesParalelos") as? String)
+                            ?: (triagem?.get("esportes") as? String)
+                            ?: doc.getString("esportesParalelos")
+                            ?: doc.getString("esportes") ?: ""
+                        TriagemDataManager.observacoes = (triagem?.get("observacoes") as? String)
+                            ?: doc.getString("observacoes") ?: ""
 
                         preencherCamposEdicao(expList, objList, etOutro, freqList)
                     }

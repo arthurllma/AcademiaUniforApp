@@ -52,11 +52,23 @@ class HomeAlunoActivity : AppCompatActivity() {
 
         val viewFlipper = findViewById<ViewFlipper>(R.id.viewFlipperAluno)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        val fabChatMoema = findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabChatMoema)
+
+        fabChatMoema?.setOnClickListener {
+            val chatbotDialog = ChatbotMoemaDialogFragment()
+            chatbotDialog.show(supportFragmentManager, "ChatbotMoemaDialogFragment")
+        }
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navHome -> viewFlipper.displayedChild = 0
-                R.id.navTreinos -> viewFlipper.displayedChild = 1
+                R.id.navHome -> {
+                    viewFlipper.displayedChild = 0
+                    fabChatMoema?.visibility = View.VISIBLE
+                }
+                R.id.navTreinos -> {
+                    viewFlipper.displayedChild = 1
+                    fabChatMoema?.visibility = View.GONE
+                }
                 R.id.navMapa -> {
                     startActivity(Intent(this, MapaActivity::class.java))
                     @Suppress("DEPRECATION")

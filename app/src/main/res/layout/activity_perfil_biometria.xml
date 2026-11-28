@@ -181,7 +181,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
                 android:background="@drawable/bg_card_blue"
                 android:orientation="vertical"
                 android:padding="20dp">
@@ -198,6 +197,61 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Hipertensão arterial (sob medicação)."
+                    android:textColor="@color/primary_blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Esportes Paralelos -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_card_blue"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Esportes Paralelos"
+                    android:textColor="@color/dark_navy"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvValorEsportesParalelos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Nenhum"
+                    tools:text="Nenhum"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Observações -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/bg_card_blue"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Observações"
+                    android:textColor="@color/dark_navy"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvValorObservacoes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Nenhuma"
+                    tools:text="Nenhuma"
                     android:textColor="@color/primary_blue"
                     android:textSize="16sp"
                     android:textStyle="bold" />

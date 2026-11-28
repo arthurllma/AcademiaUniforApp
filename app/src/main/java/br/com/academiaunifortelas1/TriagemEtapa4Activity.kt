@@ -266,9 +266,12 @@ class TriagemEtapa4Activity : AppCompatActivity() {
                 if (partes.isEmpty()) "Nenhum" else partes.joinToString(", ")
             }
 
+            val obsInput = etObservacoes.text.toString().trim()
+            val observacoesFormatadas = if (obsInput.isEmpty()) "Nenhuma" else obsInput
+
             TriagemDataManager.lesoes = lesoesFormatadas
             TriagemDataManager.esportes = esportesFormatados
-            TriagemDataManager.observacoes = etObservacoes.text.toString().trim()
+            TriagemDataManager.observacoes = observacoesFormatadas
 
             if (isModoEdicao) {
                 val db = FirebaseFirestore.getInstance()
@@ -285,7 +288,9 @@ class TriagemEtapa4Activity : AppCompatActivity() {
                     "altura" to alturaDouble,
                     "imc" to imcDouble,
                     "statusParq" to TriagemDataManager.statusParq,
-                    "lesoes" to TriagemDataManager.lesoes
+                    "lesoes" to TriagemDataManager.lesoes,
+                    "esportesParalelos" to TriagemDataManager.esportes,
+                    "observacoes" to TriagemDataManager.observacoes
                 )
 
                 val updates = hashMapOf<String, Any>(
@@ -301,6 +306,7 @@ class TriagemEtapa4Activity : AppCompatActivity() {
                     "lesoes" to TriagemDataManager.lesoes,
                     "lesao" to TriagemDataManager.lesoes,
                     "esportes" to TriagemDataManager.esportes,
+                    "esportesParalelos" to TriagemDataManager.esportes,
                     "observacoes" to TriagemDataManager.observacoes,
                     "triagem" to triagemMap
                 )
@@ -316,6 +322,7 @@ class TriagemEtapa4Activity : AppCompatActivity() {
                     .putBoolean("parqRestricoes", TriagemDataManager.parqRestricoes)
                     .putString("lesoes", TriagemDataManager.lesoes)
                     .putString("esportes", TriagemDataManager.esportes)
+                    .putString("esportesParalelos", TriagemDataManager.esportes)
                     .putString("observacoes", TriagemDataManager.observacoes)
                     .apply()
 

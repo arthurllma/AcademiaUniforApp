@@ -92,16 +92,30 @@ class PerfilBiometriaActivity : AppCompatActivity() {
                             ?: document.getString("parqStatus")
                             ?: "Sem restrições"
 
+                        val esportesParalelosRaw = triagem?.get("esportesParalelos") as? String
+                            ?: triagem?.get("esportes") as? String
+                            ?: document.getString("esportesParalelos")
+                            ?: document.getString("esportes")
+                        val esportesParalelos = if (esportesParalelosRaw.isNullOrBlank()) "Nenhum" else esportesParalelosRaw
+
+                        val observacoesRaw = triagem?.get("observacoes") as? String
+                            ?: document.getString("observacoes")
+                        val observacoes = if (observacoesRaw.isNullOrBlank()) "Nenhuma" else observacoesRaw
+
                         findViewById<TextView>(R.id.tvObjetivo)?.text = objetivo
                         findViewById<TextView>(R.id.tvExperiencia)?.text = experiencia
                         findViewById<TextView>(R.id.tvRestricoes)?.text = restricoes
                         findViewById<TextView>(R.id.tvParq)?.text = statusParq
+                        findViewById<TextView>(R.id.tvValorEsportesParalelos)?.text = esportesParalelos
+                        findViewById<TextView>(R.id.tvValorObservacoes)?.text = observacoes
 
                         getSharedPreferences("TriagemDados", MODE_PRIVATE).edit()
                             .putString("objetivo", objetivo)
                             .putString("experiencia", experiencia)
                             .putString("restricoes", restricoes)
                             .putString("parqAlertas", statusParq)
+                            .putString("esportesParalelos", esportesParalelos)
+                            .putString("observacoes", observacoes)
                             .apply()
                         return@addOnSuccessListener
                     }
@@ -122,10 +136,14 @@ class PerfilBiometriaActivity : AppCompatActivity() {
         val experiencia = sharedPref.getString("experiencia", "Iniciante")
         val restricoes = sharedPref.getString("restricoes", "Nenhuma restrição registrada")
         val parqAlertas = sharedPref.getString("parqAlertas", "Sem restrições")
+        val esportesParalelos = sharedPref.getString("esportesParalelos", "Nenhum")
+        val observacoes = sharedPref.getString("observacoes", "Nenhuma")
 
         findViewById<TextView>(R.id.tvObjetivo)?.text = objetivo
         findViewById<TextView>(R.id.tvExperiencia)?.text = experiencia
         findViewById<TextView>(R.id.tvRestricoes)?.text = restricoes
         findViewById<TextView>(R.id.tvParq)?.text = parqAlertas
+        findViewById<TextView>(R.id.tvValorEsportesParalelos)?.text = if (esportesParalelos.isNullOrBlank()) "Nenhum" else esportesParalelos
+        findViewById<TextView>(R.id.tvValorObservacoes)?.text = if (observacoes.isNullOrBlank()) "Nenhuma" else observacoes
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingVertical="6dp">
+
+    <!-- Container da Moema (Alinhado à Esquerda) -->
+    <LinearLayout
+        android:id="@+id/llContainerMoema"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start|top"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivIconMoema"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:contentDescription="Moema"
+            android:src="@drawable/ic_academia_logo" />
+
+        <TextView
+            android:id="@+id/tvMensagemMoema"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="260dp"
+            android:background="@drawable/bg_chat_bubble_moema"
+            android:elevation="1dp"
+            android:padding="12dp"
+            android:textColor="@color/dark_navy"
+            android:textSize="14sp"
+            tools:text="Olá! Sou a Moema. Posso te ajudar com a execução correta, os músculos trabalhados ou dicas de postura..." />
+    </LinearLayout>
+
+    <!-- Container do Aluno (Alinhado à Direita) -->
+    <LinearLayout
+        android:id="@+id/llContainerAluno"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end|top"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/tvMensagemAluno"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="260dp"
+            android:background="@drawable/bg_chat_bubble_aluno"
+            android:elevation="1dp"
+            android:padding="12dp"
+            android:textColor="@color/dark_navy"
+            android:textSize="14sp"
+            tools:text="Oi Moema! Como faço Supino Reto?" />
+    </LinearLayout>
+
+</LinearLayout>

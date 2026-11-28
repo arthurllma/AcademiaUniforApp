@@ -65,6 +65,7 @@ class TriagemEtapa5Activity : AppCompatActivity() {
                 .putBoolean("parqRestricoes", TriagemDataManager.parqRestricoes)
                 .putString("lesoes", TriagemDataManager.lesoes)
                 .putString("esportes", TriagemDataManager.esportes)
+                .putString("esportesParalelos", TriagemDataManager.esportes)
                 .putString("observacoes", TriagemDataManager.observacoes)
                 .apply()
 
@@ -80,7 +81,9 @@ class TriagemEtapa5Activity : AppCompatActivity() {
                 "altura" to alturaDouble,
                 "imc" to imcDouble,
                 "statusParq" to TriagemDataManager.statusParq,
-                "lesoes" to TriagemDataManager.lesoes
+                "lesoes" to TriagemDataManager.lesoes,
+                "esportesParalelos" to TriagemDataManager.esportes,
+                "observacoes" to TriagemDataManager.observacoes
             )
 
             val updates = hashMapOf<String, Any>(
@@ -99,6 +102,7 @@ class TriagemEtapa5Activity : AppCompatActivity() {
                 "lesoes" to TriagemDataManager.lesoes,
                 "lesao" to TriagemDataManager.lesoes,
                 "esportes" to TriagemDataManager.esportes,
+                "esportesParalelos" to TriagemDataManager.esportes,
                 "observacoes" to TriagemDataManager.observacoes,
                 "triagem" to triagemMap
             )
